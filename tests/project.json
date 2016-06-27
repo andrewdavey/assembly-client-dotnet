@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": { },
+  "dependencies": {
+    "Microsoft.NETCore.App": {
+      "type": "platform",
+      "version": "1.0.0-rc2-3002702"
+    },
+    "NUnit": "3.2.1",
+    "dotnet-test-nunit": "3.4.0-alpha-2"
+  },
+  "testRunner": "nunit",
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": [
+        "dnxcore50",
+        "netcoreapp1.0",
+        "portable-net45+win8"
+      ]
+    }
+  }
+}
