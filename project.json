@@ -10,7 +10,7 @@
   },
   "testRunner": "nunit",
   "frameworks": {
-    "netcoreapp1.0": {
+    "netstandard1.1": {
       "imports": [
         "dnxcore50",
         "netcoreapp1.0",

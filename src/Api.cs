@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Runtime.Serialization.Json;
 using System.Net.Http.Headers;
 using System.Net;
 using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace AssemblyClient
 {   
@@ -38,11 +38,10 @@ namespace AssemblyClient
                 var url = $"{resource}?page={currentPage}";
 
                 var response = client.GetAsync(url).Result;
-                var data = response.Content.ReadAsStreamAsync().Result;
-                
-                var serializer = new DataContractJsonSerializer(typeof(ApiList<T>));
-                ApiList<T> list = (ApiList<T>) serializer.ReadObject(data);
+                var data = response.Content.ReadAsStringAsync().Result;
 
+                var list = JsonConvert.DeserializeObject<ApiList<T>>(data);
+                
                 results.AddRange(list.data);
 
                 currentPage = list.next_page;
