@@ -2371,6 +2371,7 @@
       "sha512": "P6MB1bNnyy4PizG4ewY0z2FP7R2kI3g/nB5qTF3rh75JXPekaJiDFPd+34uymg/5xtjllwCyM2RtVxaOhnRAPA==",
       "type": "package",
       "files": [
+        ".DS_Store",
         "Microsoft.CSharp.4.0.1-rc2-24027.nupkg.sha512",
         "Microsoft.CSharp.nuspec",
         "ThirdPartyNotices.txt",

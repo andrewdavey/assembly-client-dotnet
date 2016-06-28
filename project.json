@@ -7,7 +7,8 @@
     "dotnet-test-nunit": "3.4.0-alpha-2",
     "System.Runtime.Serialization.Json": "4.0.2-rc2-24027",
     "Moq": "4.6.25-alpha",
-    "System.Diagnostics.TraceSource": "4.0.0-beta-23109"
+    "System.Diagnostics.TraceSource": "4.0.0-beta-23109",
+    "Newtonsoft.Json": "9.0.1"
   },
   "testRunner": "nunit",
   "frameworks": {
@@ -20,7 +21,7 @@
       "dependencies": {
         "Microsoft.NETCore.App": {
           "type": "platform",
-          "version": "1.0.0"
+          "version": "1.0.0-rc2-3002702"
         }
       }
     }
