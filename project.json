@@ -1,5 +1,5 @@
 {
-  "name": "assembly-client",
+  "name": "assembly-client-dotnet",
   "version": "1.0.0-*",
   "buildOptions": { },
   "dependencies": {
