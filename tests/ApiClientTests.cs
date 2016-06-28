@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Moq;
 using NUnit.Framework;
 using AssemblyClient;
 
@@ -9,6 +11,8 @@ namespace AllTheTests
     {
         ApiClient client;
         IApi api;
+
+        IList<Student> students;
 
         string token;
         string refreshToken;
@@ -23,6 +27,8 @@ namespace AllTheTests
             clientId = new Random().Next().ToString();
             clientSecret = new Random().Next().ToString();
 
+            api = Mock.Of<IApi>();
+
             var config = new ApiConfiguration
             {
                 Token = token,
@@ -31,7 +37,13 @@ namespace AllTheTests
                 ClientSecret = clientSecret
             };
 
-            api = new MockApi();
+            students = new List<Student>()
+            {
+                new Student(),
+                new Student()
+            };
+
+            Mock.Get(api).Setup(x => x.get<Student>("students", config)).Returns(students);
 
             client = new ApiClient(api);
             client.Configure(config);
@@ -50,7 +62,7 @@ namespace AllTheTests
         public void RequestsAListOfStudentsAGivenSchool(int schoolId)
         {
             var students = client.Students();
-            Assert.That(students.Count, Is.EqualTo(2));
+            Assert.That(students.Count, Is.EqualTo(students.Count));
         }
     }
 }
