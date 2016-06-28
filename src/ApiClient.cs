@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Collections.Generic;
 
 namespace AssemblyClient
@@ -11,7 +12,14 @@ namespace AssemblyClient
 
         public ApiClient()
         {
-            this.api = new Api("http://api.lvh.me:3000/students");
+            var endpoint = "https://api.assembly.education";
+            
+            var httpClient = new HttpClient
+            {
+                BaseAddress = new Uri(endpoint)
+            };
+
+            this.api = new Api(httpClient);
         }
 
         public ApiClient(IApi api)

@@ -4,10 +4,10 @@ using Moq;
 using NUnit.Framework;
 using AssemblyClient;
 
-namespace AllTheTests
+namespace AssemblyClientTests
 {
     [TestFixture]
-    public class SomeTests
+    public class ApiClientTests
     {
         ApiClient client;
         IApi api;
@@ -56,6 +56,12 @@ namespace AllTheTests
             Assert.That(client.Configuration.RefreshToken, Is.EqualTo(refreshToken));
             Assert.That(client.Configuration.ClientId, Is.EqualTo(clientId));
             Assert.That(client.Configuration.ClientSecret, Is.EqualTo(clientSecret));
+        }
+
+        [Test]
+        public void ThrowsAnExceptionIfTheWebResponseIsNotOk()
+        {
+            client.Students();
         }
 
         [TestCase(1)]

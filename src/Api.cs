@@ -10,18 +10,11 @@ namespace AssemblyClient
 {   
     public class Api : IApi
     {
-        private string endpoint;
         private HttpClient client;
 
-        public Api(string endpoint)
+        public Api(HttpClient client)
         {
-            this.endpoint = endpoint;
-
-            this.client = new HttpClient
-            {
-                BaseAddress = new Uri(endpoint)
-            };
-
+            this.client = client;
             this.client.DefaultRequestHeaders.Add("Accept", "application/json; version=1");
         }
 
@@ -38,6 +31,9 @@ namespace AssemblyClient
                 var url = $"{resource}?page={currentPage}";
 
                 var response = client.GetAsync(url).Result;
+                
+                response.EnsureSuccessStatusCode();
+
                 var data = response.Content.ReadAsStringAsync().Result;
 
                 var list = JsonConvert.DeserializeObject<ApiList<T>>(data);
