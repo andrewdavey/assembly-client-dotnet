@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-alpha",
+  "version": "1.0.*-alpha",
   "buildOptions": { },
   "dependencies": {
     "NUnit": "3.2.1",
