@@ -1,14 +1,28 @@
 using System;
 using System.Net.Http;
+using System.Dynamic;
 using System.Collections.Generic;
 
 namespace AssemblyClient
 {   
+    public class TokenRefreshedEventArgs
+    {
+        public string Token { get; set; }
+    }
+
     public class ApiClient
     {
-        public ApiConfiguration Configuration { get; private set; }
+        public event EventHandler<TokenRefreshedEventArgs> TokenRefreshed;
 
-        private IApi api;
+        public ApiConfiguration Configuration 
+        { 
+            get
+            {
+                return this.api.Configuration;
+            } 
+        }
+
+        private readonly Api api;
 
         public ApiClient()
         {
@@ -22,20 +36,41 @@ namespace AssemblyClient
             this.api = new Api(httpClient);
         }
 
-        public ApiClient(IApi api)
+        public void OnTokenRefreshed(string newToken) 
+        {
+            if (TokenRefreshed != null) {
+                var eventArgs = new TokenRefreshedEventArgs() {
+                    Token = newToken
+                };
+
+                TokenRefreshed(this, eventArgs);
+            }
+        }
+
+        public virtual IList<T> GetList<T>(string resource, ExpandoObject args) 
+        {
+            var results = api.GetList<T>(resource, args, OnTokenRefreshed);
+            return results;
+        }
+
+        public virtual T GetObject<T>(string resource, ExpandoObject args) 
+        {
+            var results = api.GetObject<T>(resource, args, OnTokenRefreshed);
+            return results;
+        }
+
+        public ApiClient(Api api)
         {
             this.api = api;
         }
 
-        public void Configure(ApiConfiguration config)
+        public virtual void Configure(ApiConfiguration config)
         {
-            this.Configuration = config;
+            this.api.Configuration = config;
         }
 
-        public IList<Student> Students()
-        {
-            var results = api.get<Student>("students", Configuration);
-            return results;
-        }
+        public StudentsResource Students => new StudentsResource(this);
+
+        public TeachingGroupsResource TeachingGroups => new TeachingGroupsResource(this);
     }
 }

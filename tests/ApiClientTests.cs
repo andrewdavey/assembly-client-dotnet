@@ -1,4 +1,5 @@
 using System;
+using System.Dynamic;
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
@@ -10,26 +11,31 @@ namespace AssemblyClientTests
     public class ApiClientTests
     {
         ApiClient client;
-        IApi api;
 
+        ApiConfiguration config;
+        Api api;
         IList<Student> students;
+        Student student;
 
         string token;
         string refreshToken;
         string clientId;
         string clientSecret;
+        string resource;
 
         [SetUp]
         public void Setup()
         {
-            token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYmYiOjE0NjcwMzQwNzUsImlzcyI6Imh0dHBzOi8vcGxhdGZvcm0uYXNzZW1ibHkuZWR1Y2F0aW9uIiwiaWF0IjoxNDY3MDM0MDc1LCJsZXZlbCI6InNjaG9vbCIsInNjb3BlcyI6WyJyZWdpc3RyYXRpb25fZ3JvdXBzIiwic2Nob29sIiwic3RhZmZfbWVtYmVycyIsInN0dWRlbnRfZGVtb2dyYXBoaWNzIiwic3R1ZGVudHMiLCJ0ZWFjaGluZ19ncm91cHMiLCJ5ZWFyX2dyb3VwcyJdLCJhcHBfaWQiOjEsInNjaG9vbF9pZCI6MSwiZXhwIjoxNDY5NjI2MDc1fQ.uoDEd7tAFHRMeNYBG-RtAvZJY0jPKEmLuLFa5PrYtJc";//new Random().Next().ToString();
+            token = new Random().Next().ToString();
             refreshToken = new Random().Next().ToString();
             clientId = new Random().Next().ToString();
             clientSecret = new Random().Next().ToString();
 
-            api = Mock.Of<IApi>();
+            resource = new Random().Next().ToString();
 
-            var config = new ApiConfiguration
+            api = Mock.Of<Api>();
+
+            config = new ApiConfiguration
             {
                 Token = token,
                 RefreshToken = refreshToken,
@@ -37,16 +43,21 @@ namespace AssemblyClientTests
                 ClientSecret = clientSecret
             };
 
-            students = new List<Student>()
+            students = new List<Student>() 
             {
-                new Student(),
-                new Student()
+                new Student(), new Student()
             };
 
-            Mock.Get(api).Setup(x => x.get<Student>("students", config)).Returns(students);
-
+            student = new Student();
+            
             client = new ApiClient(api);
             client.Configure(config);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Mock.Get(api).VerifyAll();
         }
 
         [Test]
@@ -59,16 +70,43 @@ namespace AssemblyClientTests
         }
 
         [Test]
-        public void ThrowsAnExceptionIfTheWebResponseIsNotOk()
+        public void ShouldGetAListFromTheApi()
         {
-            client.Students();
+            Mock.Get(api)
+                .Setup(x => x.GetList<Student>(resource, It.IsAny<ExpandoObject>(), client.OnTokenRefreshed))
+                .Returns(students)
+                .Verifiable();
+
+            client.GetList<Student>(resource, new ExpandoObject());
         }
 
-        [TestCase(1)]
-        public void RequestsAListOfStudentsAGivenSchool(int schoolId)
+        [Test]
+        public void ShouldGetAnObjectFromTheApi()
         {
-            var students = client.Students();
-            Assert.That(students.Count, Is.EqualTo(students.Count));
+            Mock.Get(api)
+                .Setup(x => x.GetObject<Student>(resource, It.IsAny<ExpandoObject>(), client.OnTokenRefreshed))
+                .Returns(student)
+                .Verifiable();
+
+            var result = client.GetObject<Student>(resource, new ExpandoObject());
+            Assert.That(result, Is.EqualTo(student));
+        }
+
+        [Test]
+        public void ShouldReceiveARefreshToken()
+        {
+            var newToken = new Random().Next().ToString();
+
+             Mock.Get(api).Setup(x => x.GetList<Student>(StudentsResource.ResourceName, It.IsAny<ExpandoObject>(), client.OnTokenRefreshed))
+                .Returns(students)
+                .Callback(() => client.OnTokenRefreshed(newToken))
+                .Verifiable();
+
+            client.TokenRefreshed += (sender, eventArgs) => {
+                Assert.That(eventArgs.Token, Is.EqualTo(newToken));
+            };
+
+            client.Students.All();
         }
     }
 }
