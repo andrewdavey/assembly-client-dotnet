@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Dynamic;
 
 namespace AssemblyClient
@@ -22,15 +24,19 @@ namespace AssemblyClient
 
         public IList<TeachingGroup> List(string academicYearId = null, string subjectCode = null, string yearCode = null, int? perPage = null)
         {
-            dynamic args = new ExpandoObject();
+            var args = new ExpandoObject();
+            var dArgs = (IDictionary<string, object>)args;
 
-            args.academic_year_id = academicYearId;
-            args.subject_code = subjectCode;
-            args.year_code = yearCode;
-            args.perPage = perPage;
+            dArgs.Add("academic_year_id", academicYearId);
+            dArgs.Add("subject_code", subjectCode);
+            dArgs.Add("year_code", yearCode);  
+            dArgs.Add("perPage", perPage);
 
             var results = client.GetList<TeachingGroup>(ResourceName, args);
-            return results;
+
+            var configuredresults = results.Select((r) => { r.Resource = this; return r; }).ToList();
+
+            return configuredresults;
         }
 
         public TeachingGroup Find(int groupId)
@@ -39,8 +45,21 @@ namespace AssemblyClient
 
             var resource = $"{ResourceName}/{groupId}";
             var result = client.GetObject<TeachingGroup>(resource, args);
+            result.Resource = this;
 
             return result;
+        }
+
+        public IList<Student> Students(int groupId, int? perPage = 100)
+        {
+            dynamic args = new ExpandoObject();
+
+            args.perPage = perPage;
+
+            var resource = $"{ResourceName}/{groupId}/students";
+            var results = client.GetList<Student>(resource, args);
+
+            return results;
         }
     }
 }

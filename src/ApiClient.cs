@@ -12,7 +12,23 @@ namespace AssemblyClient
 
     public class ApiClient
     {
-        public event EventHandler<TokenRefreshedEventArgs> TokenRefreshed;
+        public event EventHandler<TokenRefreshedEventArgs> TokenRefreshed 
+        {
+            add
+            {
+                lock (api.TokenRefreshed)
+                {
+                    api.TokenRefreshed += value;
+                }
+            }
+            remove
+            {
+                lock (api.TokenRefreshed)
+                {
+                    api.TokenRefreshed -= value;
+                }
+            }
+        }
 
         public ApiConfiguration Configuration 
         { 
@@ -36,26 +52,15 @@ namespace AssemblyClient
             this.api = new Api(httpClient);
         }
 
-        public void OnTokenRefreshed(string newToken) 
+        public virtual IList<T> GetList<T>(string resource, ExpandoObject args)
         {
-            if (TokenRefreshed != null) {
-                var eventArgs = new TokenRefreshedEventArgs() {
-                    Token = newToken
-                };
-
-                TokenRefreshed(this, eventArgs);
-            }
-        }
-
-        public virtual IList<T> GetList<T>(string resource, ExpandoObject args) 
-        {
-            var results = api.GetList<T>(resource, args, OnTokenRefreshed);
+            var results = api.GetList<T>(resource, args);
             return results;
         }
 
-        public virtual T GetObject<T>(string resource, ExpandoObject args) 
+        public virtual T GetObject<T>(string resource, ExpandoObject args)
         {
-            var results = api.GetObject<T>(resource, args, OnTokenRefreshed);
+            var results = api.GetObject<T>(resource, args);
             return results;
         }
 

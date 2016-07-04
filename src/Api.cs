@@ -13,6 +13,16 @@ namespace AssemblyClient
 
         public ApiConfiguration Configuration { get; set; }
 
+        internal EventHandler<TokenRefreshedEventArgs> TokenRefreshed;
+
+        internal void OnTokenRefreshed(string newToken)
+        {
+            if (TokenRefreshed != null) 
+            {
+                TokenRefreshed(this, new TokenRefreshedEventArgs { Token = newToken });
+            }
+        }
+
         public Api()
         {
 
@@ -21,12 +31,12 @@ namespace AssemblyClient
         public Api(HttpClient client)
         {
             this.client = client;
-            this.client.DefaultRequestHeaders.Add("Accept", "application/json; version=1");
+            this.client.DefaultRequestHeaders.Add("Accept", "application/vnd.assembly+json; version=1");
         }
 
-        public virtual string load(string resource, Action<string> tokenRefreshed)
+        public virtual string load(string resource)
         {
-            var result = load(resource, new ExpandoObject(), tokenRefreshed);
+            var result = load(resource, new ExpandoObject());
             return result;
         }
 
@@ -45,7 +55,7 @@ namespace AssemblyClient
             return refreshedToken.access_token;
         }
         
-        public virtual string load(string resource, ExpandoObject args, Action<string> tokenRefreshed)
+        public virtual string load(string resource, ExpandoObject args)
         {
             var query = args.ToParams();
             var resourceWithQuery = $"{resource}";
@@ -62,7 +72,8 @@ namespace AssemblyClient
             {
                 var newToken = RefreshToken(Configuration.RefreshToken);
                 Configuration.Token = newToken;
-                tokenRefreshed(newToken);
+
+                OnTokenRefreshed(newToken);
 
                 response = client.MakeRequest(resourceWithQuery, Configuration.Token).Result;
                 response.EnsureSuccessStatusCode();
@@ -89,7 +100,7 @@ namespace AssemblyClient
             return (ExpandoObject)target;
         }
 
-        public virtual IList<T> GetList<T>(string resource, ExpandoObject args, Action<string> tokenRefreshed)
+        public virtual IList<T> GetList<T>(string resource, ExpandoObject args)
         {
             var results = new List<T>();
 
@@ -101,7 +112,7 @@ namespace AssemblyClient
             {
                 pagedArgs.page = currentPage;
 
-                var data = load(resource, pagedArgs, tokenRefreshed);
+                var data = load(resource, pagedArgs);
 
                 var list = JsonConvert.DeserializeObject<ApiList<T>>(data);
 
@@ -113,9 +124,9 @@ namespace AssemblyClient
             return results;
         }
 
-        public virtual T GetObject<T>(string resource, ExpandoObject args, Action<string> tokenRefreshed)
+        public virtual T GetObject<T>(string resource, ExpandoObject args)
         {
-            var data = load(resource, args, tokenRefreshed);
+            var data = load(resource, args);
             var obj = JsonConvert.DeserializeObject<T>(data);
             return obj;
         } 

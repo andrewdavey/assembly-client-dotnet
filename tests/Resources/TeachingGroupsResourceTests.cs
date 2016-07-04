@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Dynamic;
 using System.Collections.Generic;
 using Moq;
@@ -109,7 +110,8 @@ namespace AssemblyClientTests
         public void ShoudFetchATeachingGroup()
         {
             var mockHttp = new MockHttpMessageHandler();
-            mockHttp.When("http://test.lvh.me/teaching-group/1").Respond(HttpStatusCode.OK, "application/json", "{ 'object': 'teaching_group', 'id': 1, 'name': '7x/Ma1', 'academic_year_id': 22, 'supervisor_ids': [ 1 ], 'student_ids': [ 15, 50, 109 ], 'subject': { 'object': 'subject', 'id': 2, 'code': 'MA', 'name': 'Mathematics' } } ");
+            mockHttp.When("http://test.lvh.me/teaching-group/1")
+                .Respond(HttpStatusCode.OK, "application/json", "{ 'object': 'teaching_group', 'id': 1, 'name': '7x/Ma1', 'academic_year_id': 22, 'supervisor_ids': [ 1 ], 'student_ids': [ 15, 50, 109 ], 'subject': { 'object': 'subject', 'id': 2, 'code': 'MA', 'name': 'Mathematics' } } ");
             
             var client = new HttpClient(mockHttp)
             {
@@ -123,9 +125,33 @@ namespace AssemblyClientTests
             var emptyArgs = new ExpandoObject();
             Action<string> refreshHandler = (token) => { };
 
-            var result = api.GetObject<TeachingGroup>("teaching-group/1", emptyArgs, refreshHandler);
+            var result = api.GetObject<TeachingGroup>("teaching-group/1", emptyArgs);
 
             Assert.That(result.Subject.Code, Is.EqualTo("MA"));
+        }
+
+        [Test]
+        public void TeachingGroupFetchesStudents()
+        {
+            var students = new List<Student>() 
+            {
+                new Student(), new Student()
+            };
+            
+            var client = Mock.Of<ApiClient>();
+           
+            var resource = new TeachingGroupsResource(client);
+
+            var teachingGroup = new TeachingGroup();
+            teachingGroup.Resource = resource;
+
+            var resourceAddress = $"{TeachingGroupsResource.ResourceName}/{teachingGroup.Id}/students";
+
+            Mock.Get(client).Setup(c => c.GetList<Student>(resourceAddress, It.IsAny<ExpandoObject>())).Returns(students);
+
+            var results = teachingGroup.Students();
+
+            Assert.That(results.First().FirstName, Is.EqualTo(students.First().FirstName));
         }
     }
 }

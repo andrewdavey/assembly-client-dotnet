@@ -72,7 +72,7 @@ namespace AssemblyClientTests
             var api = new Api(client);
             api.Configuration = config;
 
-            Assert.Throws<HttpRequestException>(() => api.GetList<Student>("students", emptyArgs, (newToken) => { }));
+            Assert.Throws<HttpRequestException>(() => api.GetList<Student>("students", emptyArgs));
         }
 
         [Test]
@@ -81,9 +81,11 @@ namespace AssemblyClientTests
             var api = new Api(client);
             api.Configuration = config;
 
-            api.load("need-auth", emptyArgs, (newToken) => {
-                Assert.That(newToken, Is.EqualTo(refreshedToken));
-            });
+            api.TokenRefreshed += (sender, args) => {
+                Assert.That(args.Token, Is.EqualTo(refreshedToken));
+            };
+
+            api.load("need-auth", emptyArgs);
         }
 
         [Test]
@@ -96,7 +98,7 @@ namespace AssemblyClientTests
             args.a = 1;
             args.b = "2";
 
-            api.load("with-params", args, refreshHandler);
+            api.load("with-params", args);
         }
 
         [Test]
@@ -105,7 +107,7 @@ namespace AssemblyClientTests
             var api = new Api(client);
             api.Configuration = config;
 
-            api.GetList<Student>("many-pages", emptyArgs, refreshHandler);
+            api.GetList<Student>("many-pages", emptyArgs);
         }
 
         [Test]
@@ -114,7 +116,7 @@ namespace AssemblyClientTests
             var api = new Api(client);
             api.Configuration = config;
 
-            var results = api.GetList<Student>("properties", emptyArgs, refreshHandler);
+            var results = api.GetList<Student>("properties", emptyArgs);
 
             Assert.That(results.Count, Is.EqualTo(1));
 
@@ -127,7 +129,7 @@ namespace AssemblyClientTests
             var api = new Api(client);
             api.Configuration = config;
 
-            var result = api.GetObject<Student>("single", emptyArgs, refreshHandler);
+            var result = api.GetObject<Student>("single", emptyArgs);
 
             Assert.That(result.FirstName, Is.EqualTo("Andy"));
         }
@@ -138,7 +140,7 @@ namespace AssemblyClientTests
             var api = new Api(client);
             api.Configuration = config;
 
-            var result = api.load("/need-auth", refreshHandler);
+            var result = api.load("/need-auth");
             
             Assert.That(api.Configuration.Token, Is.EqualTo(refreshedToken));
         }

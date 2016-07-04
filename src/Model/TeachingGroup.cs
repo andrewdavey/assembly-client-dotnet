@@ -5,6 +5,8 @@ namespace AssemblyClient
 {   
     public class TeachingGroup
     {
+        internal TeachingGroupsResource Resource { get; set; }
+
         [JsonProperty("id")]
         public int Id { get; set; }
 
@@ -22,5 +24,11 @@ namespace AssemblyClient
 
         [JsonProperty("subject")]
         public Subject Subject { get; set; }
+
+        public IList<Student> Students(int? perPage = 100)
+        {
+            var results = Resource.Students(Id, perPage: perPage);
+            return results;
+        }
     }
 }
