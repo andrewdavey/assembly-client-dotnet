@@ -3,7 +3,7 @@
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Install the NuGet package into your Project:
 
 ```powershell
 Install-Package assembly-client-dotnet
