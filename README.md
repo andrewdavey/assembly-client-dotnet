@@ -12,7 +12,7 @@ Install-Package assembly-client-dotnet
 
 ## Usage
 
-Some examples of how to pull information from the Assembly Platform API using the client Gem.
+Some examples of how to pull information from the Assembly Platform API using the client.
 
 ```c#
 var config = new ApiConfiguration()
