@@ -91,25 +91,5 @@ namespace AssemblyClientTests
             var result = client.GetObject<Student>(resource, new ExpandoObject());
             Assert.That(result, Is.EqualTo(student));
         }
-
-        // [Test]
-        // public void ShouldReceiveARefreshToken()
-        // {
-        //     var newToken = new Random().Next().ToString();
-
-        //     client.TokenRefreshed += (sender, eventArgs) => {
-        //         Assert.That(eventArgs.Token, Is.EqualTo(newToken));
-        //     };
-
-        //     //  Mock.Get(api)
-        //     //     .Setup(x => x.GetList<Student>(StudentsResource.ResourceName, It.IsAny<ExpandoObject>()))
-        //     //     .Returns(students)
-        //     //     .Callback(() => api.OnTokenRefreshed(newToken))
-        //     //     .Verifiable();
-
-            
-
-        //     client.Students.All();
-        // }
     }
 }
