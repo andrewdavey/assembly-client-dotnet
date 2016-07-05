@@ -39,16 +39,20 @@ namespace AssemblyClientTests
             mockHttp.When("http://test.lvh.me/students").Respond(HttpStatusCode.NotFound);
             mockHttp.When(HttpMethod.Post, "http://test.lvh.me/oauth/token").Respond("application/json", $"{{'access_token' : '{refreshedToken}'}}");
             
+            mockHttp.When("http://test.lvh.me/correct-accept").WithHeaders(new Dictionary<string, string>() 
+            { 
+                { "Accept", "application/vnd.assembly+json; version=1"},
+            })
+            .Respond(HttpStatusCode.OK, "application/json", "{'data' : {}}");
+
             mockHttp.When("http://test.lvh.me/need-auth").WithHeaders(new Dictionary<string, string>() 
                 { 
-                    { "Accept", "application/json; version=1"}, 
                     { "Authorization", $"Bearer {config.Token}" }
                 })
                 .Respond(HttpStatusCode.Unauthorized, "application/json", "{'error' : 'invalid_token'}");
             
             mockHttp.When("http://test.lvh.me/need-auth").WithHeaders(new Dictionary<string, string>() 
                 { 
-                    { "Accept", "application/json; version=1"}, 
                     {"Authorization", $"Bearer {refreshedToken}"}
                 })
                 .Respond(HttpStatusCode.OK, "application/json", "{'first_name' : 'Nick'}");
@@ -73,6 +77,15 @@ namespace AssemblyClientTests
             api.Configuration = config;
 
             Assert.Throws<HttpRequestException>(() => api.GetList<Student>("students", emptyArgs));
+        }
+
+        [Test]
+        public void ShouldHaveTheCorrectAcceptHeader()
+        {
+            var api = new Api(client);
+            api.Configuration = config;
+
+            api.load("correct-accept", emptyArgs);
         }
 
         [Test]
