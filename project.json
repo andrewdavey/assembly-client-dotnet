@@ -1,6 +1,13 @@
 {
   "name": "assembly-client-dotnet",
   "version": "1.0.0-*",
+  "title": "Assembly Client",
+  "copyright": "Assembly Education 2016",
+  "packOptions": {
+    "projectUrl": "https://github.com/assembly-edu/assembly-client-dotnet",
+    "iconUrl": "http://assembly.education/images/logo-animation/icon-71e948ce.svg",
+    "summary": "A .NET client for the Assembly Platform http://developers.assembly.education"
+  },
   "buildOptions": { },
   "dependencies": {
     "NUnit": "3.2.1",
