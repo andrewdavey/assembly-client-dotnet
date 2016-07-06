@@ -1,6 +1,6 @@
-# Assembly
+# Assembly Client
 
-Assembly .NET Client for **.NET 4.5** and above.
+Assembly .NET Client supports **.NET 4.5** and above.
 
 ## Installation
 
