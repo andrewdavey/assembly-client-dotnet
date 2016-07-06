@@ -1,13 +1,16 @@
 # Assembly
 
+Assembly .NET Client for **.NET 4.5** and above.
 
 ## Installation
+
+If using Visual Studio NuGet, ensure **prerelease** is checked in your NuGet Client.
 
 Install the NuGet package into your Project:
 
 ```powershell
 Install-Package assembly-client-dotnet
-
+Install-Package Newtonsoft.Json
 ```
 
 ## Usage
