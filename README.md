@@ -62,6 +62,10 @@ foreach (var student in year7Students)
 
 Install dotnet core: https://www.microsoft.com/net/core
 
+Restore the packages `dotnet restore`
+
 To run the tests `dotnet test`
+
+If on OSX run `dotnet test -f netstandard1.1`
 
 Build and Release are automatically run on commits to master (and accepted Pull Requests).
