@@ -5,6 +5,13 @@ using System.Collections.Generic;
 
 namespace AssemblyClient
 {   
+
+    public enum AssemblyEnvironment 
+    {
+        Production,
+        Sandbox
+    }
+
     public class TokenRefreshedEventArgs
     {
         public string Token { get; set; }
@@ -40,9 +47,21 @@ namespace AssemblyClient
 
         private readonly Api api;
 
-        public ApiClient()
+        public ApiClient() : this(AssemblyEnvironment.Production) {}
+
+        public ApiClient(AssemblyEnvironment environment)
         {
-            var endpoint = "https://api.assembly.education";
+            var endpoint = "";
+
+            switch(environment) 
+            {
+                case AssemblyEnvironment.Sandbox:
+                    endpoint = "https://api-sandbox.assembly.education";
+                    break;
+                default:
+                    endpoint = "https://api.assembly.education";
+                    break;       
+            }
             
             var httpClient = new HttpClient
             {
@@ -50,6 +69,11 @@ namespace AssemblyClient
             };
 
             this.api = new Api(httpClient);
+        }
+
+        public ApiClient(Api api)
+        {
+            this.api = api;
         }
 
         public virtual IList<T> GetList<T>(string resource, ExpandoObject args)
@@ -62,11 +86,6 @@ namespace AssemblyClient
         {
             var results = api.GetObject<T>(resource, args);
             return results;
-        }
-
-        public ApiClient(Api api)
-        {
-            this.api = api;
         }
 
         public virtual void Configure(ApiConfiguration config)

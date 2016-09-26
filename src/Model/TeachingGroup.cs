@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System;
 
 namespace AssemblyClient
 {   
@@ -24,6 +25,13 @@ namespace AssemblyClient
 
         [JsonProperty("subject")]
         public Subject Subject { get; set; }
+
+        [JsonProperty("start_date")]
+        public DateTime StartDate { get; set; }
+
+        [JsonProperty("end_date")]
+        public DateTime EndDate { get; set; }
+
 
         public IList<Student> Students(int? perPage = 100)
         {
