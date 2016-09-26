@@ -22,15 +22,19 @@ namespace AssemblyClient
             return results;
         }
 
-        public IList<TeachingGroup> List(string academicYearId = null, string subjectCode = null, string yearCode = null, int? perPage = null)
+        public IList<TeachingGroup> List(string academicYearId = null, string subjectCode = null, string yearCode = null, DateTime? date = null, DateTime? startDate = null, DateTime? endDate = null, int? perPage = null)
         {
             var args = new ExpandoObject();
             var dArgs = (IDictionary<string, object>)args;
+            var dateFormat = "yyyy-MM-dd";
 
             dArgs.Add("academic_year_id", academicYearId);
             dArgs.Add("subject_code", subjectCode);
-            dArgs.Add("year_code", yearCode);  
-            dArgs.Add("perPage", perPage);
+            dArgs.Add("year_code", yearCode);
+            dArgs.Add("date", date?.ToString(dateFormat));
+            dArgs.Add("start_date", startDate?.ToString(dateFormat));
+            dArgs.Add("end_date", endDate?.ToString(dateFormat));  
+            dArgs.Add("per_page", perPage);
 
             var results = client.GetList<TeachingGroup>(ResourceName, args);
 
