@@ -1,6 +1,6 @@
 {
   "name": "assembly-client-dotnet",
-  "version": "1.0.2-*",
+  "version": "1.0.3-*",
   "title": "Assembly Client",
   "copyright": "Assembly Education 2016",
   "packOptions": {
