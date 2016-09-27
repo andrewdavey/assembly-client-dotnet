@@ -30,6 +30,9 @@ var config = new ApiConfiguration()
 var client = new ApiClient(AssemblyEnvironment.Sandbox);
 client.Configure(config);
 
+// Fetch registration groups, filtered by a year group.
+var regGroups = client.RegistrationGroups.List(yearCode: "7");
+
 // Fetch all teaching groups (you may know these as classes) for the mathematics subject code.
 var mathsGroups = client.TeachingGroups.List(subjectCode: "MA");
 
