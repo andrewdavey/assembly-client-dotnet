@@ -96,5 +96,7 @@ namespace AssemblyClient
         public StudentsResource Students => new StudentsResource(this);
 
         public TeachingGroupsResource TeachingGroups => new TeachingGroupsResource(this);
+
+        public RegistrationGroupsResource RegistrationGroups => new RegistrationGroupsResource(this);
     }
 }
