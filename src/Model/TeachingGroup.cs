@@ -1,6 +1,7 @@
-using Newtonsoft.Json;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace AssemblyClient
 {   
@@ -33,7 +34,7 @@ namespace AssemblyClient
         public DateTime EndDate { get; set; }
 
 
-        public IList<Student> Students(int? perPage = 100)
+        public Task<IList<Student>> Students(int? perPage = 100)
         {
             var results = Resource.Students(Id, perPage: perPage);
             return results;

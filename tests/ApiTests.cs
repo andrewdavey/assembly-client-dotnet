@@ -1,12 +1,13 @@
-using System.Linq;
-using System.Net.Http;
-using System.Dynamic;
+using System;
 using System.Net;
+using System.Net.Http;
+using System.Linq;
+using System.Dynamic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using AssemblyClient;
 using RichardSzalay.MockHttp;
-using System;
-using System.Collections.Generic;
 
 namespace AssemblyClientTests
 {
@@ -76,33 +77,24 @@ namespace AssemblyClientTests
             var api = new Api(client);
             api.Configuration = config;
 
-            Assert.Throws<HttpRequestException>(() => api.GetList<Student>("students", emptyArgs));
+            Assert.ThrowsAsync<HttpRequestException>(async () => 
+            {
+                await api.GetList<Student>("students", emptyArgs);
+            });
         }
 
         [Test]
-        public void ShouldHaveTheCorrectAcceptHeader()
+        public async Task ShouldHaveTheCorrectAcceptHeader()
         {
             var api = new Api(client);
             api.Configuration = config;
 
-            api.load("correct-accept", emptyArgs);
+            await api.load("correct-accept", emptyArgs);
         }
 
-        [Test]
-        public void ShouldRefreshTheTokenIfUnauthorized()
-        {
-            var api = new Api(client);
-            api.Configuration = config;
-
-            api.TokenRefreshed += (sender, args) => {
-                Assert.That(args.Token, Is.EqualTo(refreshedToken));
-            };
-
-            api.load("need-auth", emptyArgs);
-        }
 
         [Test]
-        public void ShouldGetWithTheSuppliedParameters()
+        public async Task ShouldGetWithTheSuppliedParameters()
         {
             var api = new Api(client);
             api.Configuration = config;
@@ -111,25 +103,25 @@ namespace AssemblyClientTests
             args.a = 1;
             args.b = "2";
 
-            api.load("with-params", args);
+            await api.load("with-params", args);
         }
 
         [Test]
-        public void ShouldGetAllTheSuppliedPages()
+        public async Task ShouldGetAllTheSuppliedPages()
         {
             var api = new Api(client);
             api.Configuration = config;
 
-            api.GetList<Student>("many-pages", emptyArgs);
+            await api.GetList<Student>("many-pages", emptyArgs);
         }
 
         [Test]
-        public void ShouldReturnCorrectPropertyStyle()
+        public async Task ShouldReturnCorrectPropertyStyle()
         {
             var api = new Api(client);
             api.Configuration = config;
 
-            var results = api.GetList<Student>("properties", emptyArgs);
+            var results = await api.GetList<Student>("properties", emptyArgs);
 
             Assert.That(results.Count, Is.EqualTo(1));
 
@@ -137,23 +129,23 @@ namespace AssemblyClientTests
         }
 
         [Test]
-        public void ShouldFetchAnObject()
+        public async Task ShouldFetchAnObject()
         {
             var api = new Api(client);
             api.Configuration = config;
 
-            var result = api.GetObject<Student>("single", emptyArgs);
+            var result = await api.GetObject<Student>("single", emptyArgs);
 
             Assert.That(result.FirstName, Is.EqualTo("Andy"));
         }
 
         [Test]
-        public void ShouldUpdateTheTokenIfARefreshOccurs()
+        public async Task ShouldUpdateTheTokenIfARefreshOccurs()
         {
             var api = new Api(client);
             api.Configuration = config;
 
-            var result = api.load("/need-auth");
+            var result = await api.load("/need-auth");
             
             Assert.That(api.Configuration.Token, Is.EqualTo(refreshedToken));
         }

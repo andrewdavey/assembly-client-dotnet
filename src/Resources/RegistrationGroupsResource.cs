@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Dynamic;
+using System.Threading.Tasks;
 
 namespace AssemblyClient
 {
@@ -16,13 +17,13 @@ namespace AssemblyClient
             this.client = client;
         }
 
-        public IList<RegistrationGroup> All()
+        public async Task<IList<RegistrationGroup>> All()
         {
-            var results = List(perPage:100);
+            var results = await List(perPage:100);
             return results;
         }
 
-        public IList<RegistrationGroup> List(string yearCode = null, DateTime? date = null, DateTime? startDate = null, DateTime? endDate = null, int? perPage = null)
+        public async Task<IList<RegistrationGroup>> List(string yearCode = null, DateTime? date = null, DateTime? startDate = null, DateTime? endDate = null, int? perPage = null)
         {
             var args = new ExpandoObject();
             var dArgs = (IDictionary<string, object>)args;
@@ -34,32 +35,32 @@ namespace AssemblyClient
             dArgs.Add("end_date", endDate?.ToString(dateFormat));  
             dArgs.Add("per_page", perPage);
 
-            var results = client.GetList<RegistrationGroup>(ResourceName, args);
+            var results = await client.GetList<RegistrationGroup>(ResourceName, args);
 
             var configuredresults = results.Select((r) => { r.Resource = this; return r; }).ToList();
 
             return configuredresults;
         }
 
-        public RegistrationGroup Find(int groupId)
+        public async Task<RegistrationGroup> Find(int groupId)
         {
             dynamic args = new ExpandoObject();
 
             var resource = $"{ResourceName}/{groupId}";
-            var result = client.GetObject<RegistrationGroup>(resource, args);
+            var result = await client.GetObject<RegistrationGroup>(resource, args);
             result.Resource = this;
 
             return result;
         }
 
-        public IList<Student> Students(int groupId, int? perPage = 100)
+        public async Task<IList<Student>> Students(int groupId, int? perPage = 100)
         {
             dynamic args = new ExpandoObject();
 
             args.per_page = perPage;
 
             var resource = $"{ResourceName}/{groupId}/students";
-            var results = client.GetList<Student>(resource, args);
+            var results = await client.GetList<Student>(resource, args);
 
             return results;
         }

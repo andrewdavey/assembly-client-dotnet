@@ -7,6 +7,7 @@ using NUnit.Framework;
 using AssemblyClient;
 using System.Net.Http;
 using RichardSzalay.MockHttp;
+using System.Threading.Tasks;
 using System.Net;
 
 namespace AssemblyClientTests
@@ -23,30 +24,30 @@ namespace AssemblyClientTests
         }
 
         [Test]
-        public void ShouldRequestAllFromTheApi()
+        public async Task ShouldRequestAllFromTheApi()
         {
             var client = Mock.Of<ApiClient>();
 
-            var students = new List<TeachingGroup>() 
+            IList<TeachingGroup> students = new List<TeachingGroup>() 
             {
                 new TeachingGroup(), new TeachingGroup()
             };
 
-            Mock.Get(client).Setup(c => c.GetList<TeachingGroup>("teaching_groups", It.IsAny<ExpandoObject>())).Returns(students);
+            Mock.Get(client).Setup(c => c.GetList<TeachingGroup>("teaching_groups", It.IsAny<ExpandoObject>())).Returns(Task.FromResult(students));
 
             var resource = new TeachingGroupsResource(client);
 
-            resource.All();
+            await resource.All();
 
             Mock.Get(client).VerifyAll();
         }
 
         [Test]
-        public void ShouldRequestListFromTheApiWithAllParameters()
+        public async Task ShouldRequestListFromTheApiWithAllParameters()
         {
             var client = Mock.Of<ApiClient>();
 
-            var teachingGroups = new List<TeachingGroup>() 
+            IList<TeachingGroup> teachingGroups = new List<TeachingGroup>() 
             {
                 new TeachingGroup(), new TeachingGroup()
             };
@@ -58,17 +59,17 @@ namespace AssemblyClientTests
                 It.Is<ExpandoObject>(x => 
                 x.V<string>("year_code") == "a" && 
                 x.V<string>("academic_year_id") == academicYearId))
-            ).Returns(teachingGroups).Verifiable();
+            ).Returns(Task.FromResult(teachingGroups)).Verifiable();
 
             var resource = new TeachingGroupsResource(client);
-            var results = resource.List(academicYearId: academicYearId, yearCode: yearCode);
+            var results = await resource.List(academicYearId: academicYearId, yearCode: yearCode);
             Assert.That(results.Count, Is.EqualTo(teachingGroups.Count));
 
             Mock.Get(client).VerifyAll();
         }
 
         [Test]
-        public void ShouldRequestAnItemFromTheApi()
+        public async Task ShouldRequestAnItemFromTheApi()
         {
             var client = Mock.Of<ApiClient>();
 
@@ -77,37 +78,37 @@ namespace AssemblyClientTests
             int itemId = 1;
 
             Mock.Get(client).Setup(c => c.GetObject<TeachingGroup>($"teaching_groups/{itemId}", It.IsAny<ExpandoObject>())
-            ).Returns(item).Verifiable();
+            ).Returns(Task.FromResult(item)).Verifiable();
 
             var teachingGroupsResource = new TeachingGroupsResource(client);
-            var result = teachingGroupsResource.Find(itemId);
+            var result = await teachingGroupsResource.Find(itemId);
 
             Mock.Get(client).VerifyAll();
         }
 
         [Test]
-        public void ShouldRequestListFromTheApiWithOnlySomeParameters()
+        public async Task ShouldRequestListFromTheApiWithOnlySomeParameters()
         {
             var client = Mock.Of<ApiClient>();
 
-            var students = new List<TeachingGroup>() 
+            IList<TeachingGroup> students = new List<TeachingGroup>() 
             {
                 new TeachingGroup(), new TeachingGroup()
             };
 
             Mock.Get(client).Setup(c => c.GetList<TeachingGroup>("teaching_groups", 
                 It.Is<ExpandoObject>(x =>  x.V("year_code") == null))
-            ).Returns(students).Verifiable();
+            ).Returns(Task.FromResult(students)).Verifiable();
 
             var teachingGroupsResource = new TeachingGroupsResource(client);
-            var results = teachingGroupsResource.List();
+            var results = await teachingGroupsResource.List();
             Assert.That(results.Count, Is.EqualTo(students.Count));
 
             Mock.Get(client).VerifyAll();
         }
 
         [Test]
-        public void ShoudFetchATeachingGroup()
+        public async Task ShoudFetchATeachingGroup()
         {
             var mockHttp = new MockHttpMessageHandler();
             mockHttp.When("http://test.lvh.me/teaching-group/1")
@@ -125,15 +126,15 @@ namespace AssemblyClientTests
             var emptyArgs = new ExpandoObject();
             Action<string> refreshHandler = (token) => { };
 
-            var result = api.GetObject<TeachingGroup>("teaching-group/1", emptyArgs);
+            var result = await api.GetObject<TeachingGroup>("teaching-group/1", emptyArgs);
 
             Assert.That(result.Subject.Code, Is.EqualTo("MA"));
         }
 
         [Test]
-        public void TeachingGroupFetchesStudents()
+        public async Task TeachingGroupFetchesStudents()
         {
-            var students = new List<Student>() 
+            IList<Student> students = new List<Student>() 
             {
                 new Student(), new Student()
             };
@@ -147,11 +148,11 @@ namespace AssemblyClientTests
 
             var resourceAddress = $"{TeachingGroupsResource.ResourceName}/{teachingGroup.Id}/students";
 
-            Mock.Get(client).Setup(c => c.GetList<Student>(resourceAddress, It.IsAny<ExpandoObject>())).Returns(students);
+            Mock.Get(client).Setup(c => c.GetList<Student>(resourceAddress, It.IsAny<ExpandoObject>())).Returns(Task.FromResult(students));
 
-            var results = teachingGroup.Students();
+            var results = await teachingGroup.Students();
 
             Assert.That(results.First().FirstName, Is.EqualTo(students.First().FirstName));
         }
-    }
+   }
 }

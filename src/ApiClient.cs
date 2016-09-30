@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Dynamic;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AssemblyClient
 {   
@@ -37,13 +38,7 @@ namespace AssemblyClient
             }
         }
 
-        public ApiConfiguration Configuration 
-        { 
-            get
-            {
-                return this.api.Configuration;
-            } 
-        }
+        public ApiConfiguration Configuration => this.api.Configuration;
 
         private readonly Api api;
 
@@ -76,15 +71,15 @@ namespace AssemblyClient
             this.api = api;
         }
 
-        public virtual IList<T> GetList<T>(string resource, ExpandoObject args)
+        public virtual async Task<IList<T>> GetList<T>(string resource, ExpandoObject args)
         {
-            var results = api.GetList<T>(resource, args);
+            var results = await api.GetList<T>(resource, args);
             return results;
         }
 
-        public virtual T GetObject<T>(string resource, ExpandoObject args)
+        public virtual async Task<T> GetObject<T>(string resource, ExpandoObject args)
         {
-            var results = api.GetObject<T>(resource, args);
+            var results = await api.GetObject<T>(resource, args);
             return results;
         }
 

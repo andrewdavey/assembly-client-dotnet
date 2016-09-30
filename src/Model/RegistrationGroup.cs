@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System;
+using System.Threading.Tasks;
 
 namespace AssemblyClient
 {   
@@ -20,9 +21,9 @@ namespace AssemblyClient
         [JsonProperty("student_ids")]
         public IList<int> StudentIds { get; set; }
 
-        public IList<Student> Students(int? perPage = 100)
+        public async Task<IList<Student>> Students(int? perPage = 100)
         {
-            var results = Resource.Students(Id, perPage: perPage);
+            var results = await Resource.Students(Id, perPage: perPage);
             return results;
         }
     }

@@ -31,13 +31,13 @@ var client = new ApiClient(AssemblyEnvironment.Sandbox);
 client.Configure(config);
 
 // Fetch registration groups, filtered by a year group.
-var regGroups = client.RegistrationGroups.List(yearCode: "7");
+var regGroups = await client.RegistrationGroups.List(yearCode: "7");
 
 // Fetch all teaching groups (you may know these as classes) for the mathematics subject code.
-var mathsGroups = client.TeachingGroups.List(subjectCode: "MA");
+var mathsGroups = await client.TeachingGroups.List(subjectCode: "MA");
 
 // You can also apply a date filter to get, say, teaching groups from last academic year or for another specific range of time.
-var mathsGroups = client.TeachingGroups.List(startDate: DateTime.Parse("2016-09-01"), endDate: DateTime.Parse("2017-07-31"));
+var mathsGroups = await client.TeachingGroups.List(startDate: DateTime.Parse("2016-09-01"), endDate: DateTime.Parse("2017-07-31"));
 
 foreach (var group in mathsGroups)
 {
@@ -45,7 +45,7 @@ foreach (var group in mathsGroups)
 }
 
 // Fetch all the students for this teaching group.
-var mathsStudents = mathsGroups.First().Students();
+var mathsStudents = await mathsGroups.First().Students();
 
 foreach (var student in mathsStudents)
 {
@@ -53,7 +53,7 @@ foreach (var student in mathsStudents)
 }
 
 // ...or fetch all students filtered by year code/year group
-var year7Students = client.Students.List(yearCode: "7");
+var year7Students = await client.Students.List(yearCode: "7");
 
 foreach (var student in year7Students)
 {

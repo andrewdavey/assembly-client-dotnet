@@ -1,5 +1,6 @@
 using System;
 using System.Dynamic;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
@@ -70,25 +71,25 @@ namespace AssemblyClientTests
         }
 
         [Test]
-        public void ShouldGetAListFromTheApi()
+        public async Task ShouldGetAListFromTheApi()
         {
             Mock.Get(api)
                 .Setup(x => x.GetList<Student>(resource, It.IsAny<ExpandoObject>()))
-                .Returns(students)
+                .Returns(Task.FromResult(students))
                 .Verifiable();
 
-            client.GetList<Student>(resource, new ExpandoObject());
+            await client.GetList<Student>(resource, new ExpandoObject());
         }
 
         [Test]
-        public void ShouldGetAnObjectFromTheApi()
+        public async Task ShouldGetAnObjectFromTheApi()
         {
             Mock.Get(api)
                 .Setup(x => x.GetObject<Student>(resource, It.IsAny<ExpandoObject>()))
-                .Returns(student)
+                .Returns(Task.FromResult(student))
                 .Verifiable();
 
-            var result = client.GetObject<Student>(resource, new ExpandoObject());
+            var result = await client.GetObject<Student>(resource, new ExpandoObject());
             Assert.That(result, Is.EqualTo(student));
         }
     }

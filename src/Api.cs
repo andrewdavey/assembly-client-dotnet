@@ -2,6 +2,7 @@ using System;
 using System.Dynamic;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Portable.Text;
 
@@ -34,9 +35,9 @@ namespace AssemblyClient
             this.client.DefaultRequestHeaders.Add("Accept", "application/vnd.assembly+json; version=1");
         }
 
-        public virtual string load(string resource)
+        public virtual async Task<string> load(string resource)
         {
-            var result = load(resource, new ExpandoObject());
+            var result = await load(resource, new ExpandoObject());
             return result;
         }
 
@@ -55,7 +56,7 @@ namespace AssemblyClient
             return refreshedToken.access_token;
         }
         
-        public virtual string load(string resource, ExpandoObject args)
+        public virtual async Task<string> load(string resource, ExpandoObject args)
         {
             var query = args.ToParams();
             var resourceWithQuery = $"{resource}";
@@ -65,7 +66,7 @@ namespace AssemblyClient
                 resourceWithQuery = $"{resourceWithQuery}?{query}";
             }
 
-            var response = client.MakeRequest(resourceWithQuery, Configuration.Token).Result;
+            var response = await client.MakeRequest(resourceWithQuery, Configuration.Token);
             var isTokenValid = response.IsValidToken();
 
             if (!isTokenValid)
@@ -75,7 +76,7 @@ namespace AssemblyClient
 
                 OnTokenRefreshed(newToken);
 
-                response = client.MakeRequest(resourceWithQuery, Configuration.Token).Result;
+                response = await client.MakeRequest(resourceWithQuery, Configuration.Token);
                 response.EnsureSuccessStatusCode();
             }
             else
@@ -100,7 +101,7 @@ namespace AssemblyClient
             return (ExpandoObject)target;
         }
 
-        public virtual IList<T> GetList<T>(string resource, ExpandoObject args)
+        public virtual async Task<IList<T>> GetList<T>(string resource, ExpandoObject args)
         {
             var results = new List<T>();
 
@@ -112,7 +113,7 @@ namespace AssemblyClient
             {
                 pagedArgs.page = currentPage;
 
-                var data = load(resource, pagedArgs);
+                var data = await load(resource, pagedArgs);
 
                 var list = JsonConvert.DeserializeObject<ApiList<T>>(data);
 
@@ -124,9 +125,10 @@ namespace AssemblyClient
             return results;
         }
 
-        public virtual T GetObject<T>(string resource, ExpandoObject args)
+
+        public virtual async Task<T> GetObject<T>(string resource, ExpandoObject args)
         {
-            var data = load(resource, args);
+            var data = await load(resource, args);
             var obj = JsonConvert.DeserializeObject<T>(data);
             return obj;
         } 

@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using System.Dynamic;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AssemblyClient
 {
@@ -14,13 +15,13 @@ namespace AssemblyClient
             this.client = client;
         }
 
-        public IList<Student> All()
+        public Task<IList<Student>> All()
         {
             var results = List(perPage:100);
             return results;
         }
 
-        public IList<Student> List(string academicYearId = null, string yearCode = null, bool? demographics = null, int? perPage = null)
+        public async Task<IList<Student>> List(string academicYearId = null, string yearCode = null, bool? demographics = null, int? perPage = null)
         {
             dynamic args = new ExpandoObject();
 
@@ -29,17 +30,17 @@ namespace AssemblyClient
             args.demographics = demographics;
             args.perPage = perPage;
 
-            var results = client.GetList<Student>(ResourceName, args);
+            var results = await client.GetList<Student>(ResourceName, args);
             return results;
         }
 
-        public Student Find(int studentId, bool? demographics = null)
+        public async Task<Student> Find(int studentId, bool? demographics = null)
         {
             dynamic args = new ExpandoObject();
             args.demographics = demographics;
 
             var resource = $"{ResourceName}/{studentId}";
-            var result = client.GetObject<Student>(resource, args);
+            var result = await client.GetObject<Student>(resource, args);
 
             return result;
         }

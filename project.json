@@ -1,8 +1,8 @@
 {
   "name": "assembly-client-dotnet",
-  "version": "1.0.4-*",
+  "version": "1.0.5-*",
   "title": "Assembly Client",
-  "copyright": "Assembly Education 2016",
+  "copyright": "Assembly Education",
   "packOptions": {
     "projectUrl": "https://github.com/assembly-edu/assembly-client-dotnet",
     "iconUrl": "http://assembly.education/images/logo-animation/icon-71e948ce.svg",
