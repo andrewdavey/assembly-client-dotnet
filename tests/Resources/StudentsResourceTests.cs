@@ -1,4 +1,3 @@
-using System;
 using System.Dynamic;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,15 +7,12 @@ using AssemblyClient;
 
 namespace AssemblyClientTests
 {
-
     [TestFixture]
     public class StudentsResourceTests
     {
-
         [SetUp]
         public void Setup()
         {
-            
         }
 
         [Test]
@@ -24,7 +20,7 @@ namespace AssemblyClientTests
         {
             var client = Mock.Of<ApiClient>();
 
-            IList<Student> students = new List<Student>() 
+            IList<Student> students = new List<Student>()
             {
                 new Student(), new Student()
             };
@@ -43,7 +39,7 @@ namespace AssemblyClientTests
         {
             var client = Mock.Of<ApiClient>();
 
-            IList<Student> students = new List<Student>() 
+            IList<Student> students = new List<Student>()
             {
                 new Student(), new Student()
             };
@@ -52,12 +48,12 @@ namespace AssemblyClientTests
             var academicYearId = "123";
             bool demographics = true;
 
-            Mock.Get(client).Setup(c => c.GetList<Student>("students", 
-                It.Is<ExpandoObject>(x => 
-                x.V<string>("year_code") == "a" && 
-                x.V<string>("academic_year_id") == academicYearId && 
-                x.V<bool>("demographics") == demographics))
-            ).Returns(Task.FromResult(students)).Verifiable();
+            Mock.Get(client).Setup(c => c.GetList<Student>(
+                "students",
+                It.Is<ExpandoObject>(x =>
+                x.V<string>("year_code") == "a" &&
+                x.V<string>("academic_year_id") == academicYearId &&
+                x.V<bool>("demographics") == demographics))).Returns(Task.FromResult(students)).Verifiable();
 
             var studentResources = new StudentsResource(client);
             var results = await studentResources.List(academicYearId: academicYearId, yearCode: yearCode, demographics: demographics);
@@ -76,10 +72,10 @@ namespace AssemblyClientTests
             int studentId = 1;
             bool demographics = true;
 
-            Mock.Get(client).Setup(c => c.GetObject<Student>($"students/{studentId}", 
-                It.Is<ExpandoObject>(x => 
-                x.V<bool>("demographics") == demographics))
-            ).Returns(Task.FromResult(item)).Verifiable();
+            Mock.Get(client).Setup(c => c.GetObject<Student>(
+                $"students/{studentId}",
+                It.Is<ExpandoObject>(x =>
+                x.V<bool>("demographics") == demographics))).Returns(Task.FromResult(item)).Verifiable();
 
             var studentResources = new StudentsResource(client);
             var result = await studentResources.Find(studentId, demographics);
@@ -92,18 +88,19 @@ namespace AssemblyClientTests
         {
             var client = Mock.Of<ApiClient>();
 
-            IList<Student> students = new List<Student>() 
+            IList<Student> students = new List<Student>()
             {
                 new Student(), new Student()
             };
 
             bool demographics = true;
 
-            Mock.Get(client).Setup(c => c.GetList<Student>("students", 
-                It.Is<ExpandoObject>(x =>  
+            Mock.Get(client).Setup(
+                c => c.GetList<Student>(
+                "students",
+                It.Is<ExpandoObject>(x =>
                 x.V<bool>("demographics") == demographics &&
-                x.V("year_code") == null))
-            ).Returns(Task.FromResult(students)).Verifiable();
+                x.V("year_code") == null))).Returns(Task.FromResult(students)).Verifiable();
 
             var studentResources = new StudentsResource(client);
             var results = await studentResources.List(demographics: demographics);
@@ -111,6 +108,5 @@ namespace AssemblyClientTests
 
             Mock.Get(client).VerifyAll();
         }
-        
     }
 }

@@ -17,7 +17,7 @@ namespace AssemblyClient
 
         public Task<IList<Student>> All()
         {
-            var results = List(perPage:100);
+            var results = List(perPage: 100);
             return results;
         }
 

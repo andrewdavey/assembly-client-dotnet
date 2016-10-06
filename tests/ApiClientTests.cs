@@ -44,13 +44,13 @@ namespace AssemblyClientTests
                 ClientSecret = clientSecret
             };
 
-            students = new List<Student>() 
+            students = new List<Student>()
             {
                 new Student(), new Student()
             };
 
             student = new Student();
-            
+
             client = new ApiClient(api);
             client.Configure(config);
         }

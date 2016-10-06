@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Dynamic;
@@ -19,7 +18,7 @@ namespace AssemblyClient
 
         public async Task<IList<TeachingGroup>> All()
         {
-            var results = await List(perPage:100);
+            var results = await List(perPage: 100);
             return results;
         }
 
@@ -30,12 +29,16 @@ namespace AssemblyClient
 
             dArgs.Add("academic_year_id", academicYearId);
             dArgs.Add("subject_code", subjectCode);
-            dArgs.Add("year_code", yearCode);  
+            dArgs.Add("year_code", yearCode);
             dArgs.Add("perPage", perPage);
 
             var results = await client.GetList<TeachingGroup>(ResourceName, args);
 
-            var configuredresults = results.Select((r) => { r.Resource = this; return r; }).ToList();
+            var configuredresults = results.Select((r) =>
+            {
+                r.Resource = this;
+                return r;
+            }).ToList();
 
             return configuredresults;
         }

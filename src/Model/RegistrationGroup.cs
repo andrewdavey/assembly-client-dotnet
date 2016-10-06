@@ -1,10 +1,9 @@
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using System;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace AssemblyClient
-{   
+{
     public class RegistrationGroup
     {
         internal RegistrationGroupsResource Resource { get; set; }

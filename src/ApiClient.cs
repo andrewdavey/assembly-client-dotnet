@@ -5,22 +5,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AssemblyClient
-{   
-
-    public enum AssemblyEnvironment 
-    {
-        Production,
-        Sandbox
-    }
-
-    public class TokenRefreshedEventArgs
-    {
-        public string Token { get; set; }
-    }
-
+{
     public class ApiClient
     {
-        public event EventHandler<TokenRefreshedEventArgs> TokenRefreshed 
+        private readonly Api api;
+
+        public ApiConfiguration Configuration => this.api.Configuration;
+
+        public event EventHandler<TokenRefreshedEventArgs> TokenRefreshed
         {
             add
             {
@@ -29,6 +21,7 @@ namespace AssemblyClient
                     api.TokenRefreshed += value;
                 }
             }
+
             remove
             {
                 lock (api.TokenRefreshed)
@@ -38,26 +31,25 @@ namespace AssemblyClient
             }
         }
 
-        public ApiConfiguration Configuration => this.api.Configuration;
-
-        private readonly Api api;
-
-        public ApiClient() : this(AssemblyEnvironment.Production) {}
+        public ApiClient()
+            : this(AssemblyEnvironment.Production)
+        {
+        }
 
         public ApiClient(AssemblyEnvironment environment)
         {
-            var endpoint = "";
+            var endpoint = string.Empty;
 
-            switch(environment) 
+            switch (environment)
             {
                 case AssemblyEnvironment.Sandbox:
                     endpoint = "https://api-sandbox.assembly.education";
                     break;
                 default:
                     endpoint = "https://api.assembly.education";
-                    break;       
+                    break;
             }
-            
+
             var httpClient = new HttpClient
             {
                 BaseAddress = new Uri(endpoint)

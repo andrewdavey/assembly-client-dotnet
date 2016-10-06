@@ -2,25 +2,22 @@ using System;
 using System.Linq;
 using System.Dynamic;
 using System.Collections.Generic;
-using Moq;
-using NUnit.Framework;
-using AssemblyClient;
 using System.Net.Http;
-using RichardSzalay.MockHttp;
 using System.Threading.Tasks;
 using System.Net;
+using NUnit.Framework;
+using RichardSzalay.MockHttp;
+using Moq;
+using AssemblyClient;
 
 namespace AssemblyClientTests
 {
-
     [TestFixture]
-    public class TeachingGroupResourceTests
+    public class TeachingGroupsResourceTests
     {
-
         [SetUp]
         public void Setup()
         {
-            
         }
 
         [Test]
@@ -28,7 +25,7 @@ namespace AssemblyClientTests
         {
             var client = Mock.Of<ApiClient>();
 
-            IList<TeachingGroup> students = new List<TeachingGroup>() 
+            IList<TeachingGroup> students = new List<TeachingGroup>()
             {
                 new TeachingGroup(), new TeachingGroup()
             };
@@ -47,19 +44,19 @@ namespace AssemblyClientTests
         {
             var client = Mock.Of<ApiClient>();
 
-            IList<TeachingGroup> teachingGroups = new List<TeachingGroup>() 
+            IList<TeachingGroup> teachingGroups = new List<TeachingGroup>()
             {
                 new TeachingGroup(), new TeachingGroup()
             };
 
             var yearCode = "a";
             var academicYearId = "123";
-            
-            Mock.Get(client).Setup(c => c.GetList<TeachingGroup>("teaching_groups", 
-                It.Is<ExpandoObject>(x => 
-                x.V<string>("year_code") == "a" && 
-                x.V<string>("academic_year_id") == academicYearId))
-            ).Returns(Task.FromResult(teachingGroups)).Verifiable();
+
+            Mock.Get(client).Setup(c => c.GetList<TeachingGroup>(
+                "teaching_groups",
+                It.Is<ExpandoObject>(x =>
+                x.V<string>("year_code") == "a" &&
+                x.V<string>("academic_year_id") == academicYearId))).Returns(Task.FromResult(teachingGroups)).Verifiable();
 
             var resource = new TeachingGroupsResource(client);
             var results = await resource.List(academicYearId: academicYearId, yearCode: yearCode);
@@ -77,8 +74,8 @@ namespace AssemblyClientTests
 
             int itemId = 1;
 
-            Mock.Get(client).Setup(c => c.GetObject<TeachingGroup>($"teaching_groups/{itemId}", It.IsAny<ExpandoObject>())
-            ).Returns(Task.FromResult(item)).Verifiable();
+            Mock.Get(client).Setup(c => c.GetObject<TeachingGroup>(
+                $"teaching_groups/{itemId}", It.IsAny<ExpandoObject>())).Returns(Task.FromResult(item)).Verifiable();
 
             var teachingGroupsResource = new TeachingGroupsResource(client);
             var result = await teachingGroupsResource.Find(itemId);
@@ -91,14 +88,14 @@ namespace AssemblyClientTests
         {
             var client = Mock.Of<ApiClient>();
 
-            IList<TeachingGroup> students = new List<TeachingGroup>() 
+            IList<TeachingGroup> students = new List<TeachingGroup>()
             {
                 new TeachingGroup(), new TeachingGroup()
             };
 
-            Mock.Get(client).Setup(c => c.GetList<TeachingGroup>("teaching_groups", 
-                It.Is<ExpandoObject>(x =>  x.V("year_code") == null))
-            ).Returns(Task.FromResult(students)).Verifiable();
+            Mock.Get(client).Setup(c => c.GetList<TeachingGroup>(
+                "teaching_groups",
+                It.Is<ExpandoObject>(x => x.V("year_code") == null))).Returns(Task.FromResult(students)).Verifiable();
 
             var teachingGroupsResource = new TeachingGroupsResource(client);
             var results = await teachingGroupsResource.List();
@@ -113,7 +110,7 @@ namespace AssemblyClientTests
             var mockHttp = new MockHttpMessageHandler();
             mockHttp.When("http://test.lvh.me/teaching-group/1")
                 .Respond(HttpStatusCode.OK, "application/json", "{ 'object': 'teaching_group', 'id': 1, 'name': '7x/Ma1', 'academic_year_id': 22, 'supervisor_ids': [ 1 ], 'student_ids': [ 15, 50, 109 ], 'subject': { 'object': 'subject', 'id': 2, 'code': 'MA', 'name': 'Mathematics' } } ");
-            
+
             var client = new HttpClient(mockHttp)
             {
                 BaseAddress = new System.Uri("http://test.lvh.me")
@@ -134,13 +131,13 @@ namespace AssemblyClientTests
         [Test]
         public async Task TeachingGroupFetchesStudents()
         {
-            IList<Student> students = new List<Student>() 
+            IList<Student> students = new List<Student>()
             {
                 new Student(), new Student()
             };
-            
+
             var client = Mock.Of<ApiClient>();
-           
+
             var resource = new TeachingGroupsResource(client);
 
             var teachingGroup = new TeachingGroup();

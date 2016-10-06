@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Rules for Assembly" Description="" ToolsVersion="14.0">
+    <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+        <Rule Id="SA1101" Action="Hidden" />
+        <Rule Id="SA1600" Action="Hidden" />
+        <Rule Id="SA1200" Action="Hidden" />
+        <Rule Id="CS1591" Action="Hidden" />
+        <Rule Id="SA1210" Action="Hidden" />
+        <Rule Id="SA1633" Action="Hidden" />
+        <Rule Id="SA1602" Action="Hidden" />
+        <Rule Id="SA1202" Action="Hidden" />
+        <Rule Id="SA1201" Action="Hidden" />
+        <Rule Id="SA1400" Action="Hidden" />
+    </Rules>
+</RuleSet>

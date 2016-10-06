@@ -19,7 +19,7 @@ namespace AssemblyClient
 
         public async Task<IList<RegistrationGroup>> All()
         {
-            var results = await List(perPage:100);
+            var results = await List(perPage: 100);
             return results;
         }
 
@@ -32,12 +32,16 @@ namespace AssemblyClient
             dArgs.Add("year_code", yearCode);
             dArgs.Add("date", date?.ToString(dateFormat));
             dArgs.Add("start_date", startDate?.ToString(dateFormat));
-            dArgs.Add("end_date", endDate?.ToString(dateFormat));  
+            dArgs.Add("end_date", endDate?.ToString(dateFormat));
             dArgs.Add("per_page", perPage);
 
             var results = await client.GetList<RegistrationGroup>(ResourceName, args);
 
-            var configuredresults = results.Select((r) => { r.Resource = this; return r; }).ToList();
+            var configuredresults = results.Select((r) =>
+            {
+                r.Resource = this;
+                return r;
+            }).ToList();
 
             return configuredresults;
         }

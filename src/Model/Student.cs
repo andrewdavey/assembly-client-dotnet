@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 
 namespace AssemblyClient
-{   
+{
     public class Student
     {
         [JsonProperty("id")]

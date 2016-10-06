@@ -2,25 +2,22 @@ using System;
 using System.Linq;
 using System.Dynamic;
 using System.Collections.Generic;
-using Moq;
-using NUnit.Framework;
-using AssemblyClient;
 using System.Net.Http;
-using RichardSzalay.MockHttp;
 using System.Threading.Tasks;
 using System.Net;
+using Moq;
+using NUnit.Framework;
+using RichardSzalay.MockHttp;
+using AssemblyClient;
 
 namespace AssemblyClientTests
 {
-
     [TestFixture]
-    public class RegistrationGroupResourceTests
+    public class RegistrationGroupsResourceTests
     {
-
         [SetUp]
         public void Setup()
         {
-            
         }
 
         [Test]
@@ -28,7 +25,7 @@ namespace AssemblyClientTests
         {
             var client = Mock.Of<ApiClient>();
 
-            IList<RegistrationGroup> groups = new List<RegistrationGroup>() 
+            IList<RegistrationGroup> groups = new List<RegistrationGroup>()
             {
                 new RegistrationGroup(), new RegistrationGroup()
             };
@@ -47,17 +44,17 @@ namespace AssemblyClientTests
         {
             var client = Mock.Of<ApiClient>();
 
-            IList<RegistrationGroup> registrationGroups = new List<RegistrationGroup>() 
+            IList<RegistrationGroup> registrationGroups = new List<RegistrationGroup>()
             {
                 new RegistrationGroup(), new RegistrationGroup()
             };
 
             var yearCode = "a";
-            
-            Mock.Get(client).Setup(c => c.GetList<RegistrationGroup>("registration_groups", 
-                It.Is<ExpandoObject>(x => 
-                x.V<string>("year_code") == "a"))
-            ).Returns(Task.FromResult(registrationGroups)).Verifiable();
+
+            Mock.Get(client).Setup(c => c.GetList<RegistrationGroup>(
+                "registration_groups",
+                It.Is<ExpandoObject>(x =>
+                x.V<string>("year_code") == "a"))).Returns(Task.FromResult(registrationGroups)).Verifiable();
 
             var resource = new RegistrationGroupsResource(client);
             var results = await resource.List(yearCode: yearCode);
@@ -75,8 +72,9 @@ namespace AssemblyClientTests
 
             int itemId = 1;
 
-            Mock.Get(client).Setup(c => c.GetObject<RegistrationGroup>($"registration_groups/{itemId}", It.IsAny<ExpandoObject>())
-            ).Returns(Task.FromResult(item)).Verifiable();
+            Mock.Get(client).Setup(c => c.GetObject<RegistrationGroup>(
+                $"registration_groups/{itemId}",
+                It.IsAny<ExpandoObject>())).Returns(Task.FromResult(item)).Verifiable();
 
             var registrationGroupResource = new RegistrationGroupsResource(client);
             var result = await registrationGroupResource.Find(itemId);
@@ -89,14 +87,14 @@ namespace AssemblyClientTests
         {
             var client = Mock.Of<ApiClient>();
 
-            IList<RegistrationGroup> groups = new List<RegistrationGroup>() 
+            IList<RegistrationGroup> groups = new List<RegistrationGroup>()
             {
                 new RegistrationGroup(), new RegistrationGroup()
             };
 
-            Mock.Get(client).Setup(c => c.GetList<RegistrationGroup>("registration_groups", 
-                It.Is<ExpandoObject>(x =>  x.V("year_code") == null))
-            ).Returns(Task.FromResult(groups)).Verifiable();
+            Mock.Get(client).Setup(c => c.GetList<RegistrationGroup>(
+                "registration_groups",
+                It.Is<ExpandoObject>(x => x.V("year_code") == null))).Returns(Task.FromResult(groups)).Verifiable();
 
             var registrationGroupResource = new RegistrationGroupsResource(client);
             var results = await registrationGroupResource.List();
@@ -111,7 +109,7 @@ namespace AssemblyClientTests
             var mockHttp = new MockHttpMessageHandler();
             mockHttp.When("http://test.lvh.me/registration-group/1")
                 .Respond(HttpStatusCode.OK, "application/json", "{ 'object': 'registration_group', 'id': 1, 'name': 'NAME', 'supervisor_ids': [ 1 ], 'student_ids': [ 15, 50, 109 ] } ");
-             
+
             var client = new HttpClient(mockHttp)
             {
                 BaseAddress = new System.Uri("http://test.lvh.me")
@@ -132,13 +130,13 @@ namespace AssemblyClientTests
         [Test]
         public async Task RegistrationGroupFetchesStudents()
         {
-            IList<Student> groups = new List<Student>() 
+            IList<Student> groups = new List<Student>()
             {
                 new Student(), new Student()
             };
-            
+
             var client = Mock.Of<ApiClient>();
-           
+
             var resource = new RegistrationGroupsResource(client);
 
             var registrationGroup = new RegistrationGroup();

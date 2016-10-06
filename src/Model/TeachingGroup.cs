@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace AssemblyClient
-{   
+{
     public class TeachingGroup
     {
         internal TeachingGroupsResource Resource { get; set; }
@@ -32,7 +32,6 @@ namespace AssemblyClient
 
         [JsonProperty("end_date")]
         public DateTime EndDate { get; set; }
-
 
         public Task<IList<Student>> Students(int? perPage = 100)
         {

@@ -19,7 +19,6 @@ namespace AssemblyClientTests
         Action<string> refreshHandler;
 
         ApiConfiguration config;
-            
 
         ExpandoObject emptyArgs;
 
@@ -39,22 +38,25 @@ namespace AssemblyClientTests
 
             mockHttp.When("http://test.lvh.me/students").Respond(HttpStatusCode.NotFound);
             mockHttp.When(HttpMethod.Post, "http://test.lvh.me/oauth/token").Respond("application/json", $"{{'access_token' : '{refreshedToken}'}}");
-            
-            mockHttp.When("http://test.lvh.me/correct-accept").WithHeaders(new Dictionary<string, string>() 
-            { 
-                { "Accept", "application/vnd.assembly+json; version=1"},
-            })
+
+            mockHttp.When("http://test.lvh.me/correct-accept").WithHeaders(
+                new Dictionary<string, string>()
+                {
+                    { "Accept", "application/vnd.assembly+json; version=1" },
+                })
             .Respond(HttpStatusCode.OK, "application/json", "{'data' : {}}");
 
-            mockHttp.When("http://test.lvh.me/need-auth").WithHeaders(new Dictionary<string, string>() 
-                { 
+            mockHttp.When("http://test.lvh.me/need-auth").WithHeaders(
+                new Dictionary<string, string>()
+                {
                     { "Authorization", $"Bearer {config.Token}" }
                 })
                 .Respond(HttpStatusCode.Unauthorized, "application/json", "{'error' : 'invalid_token'}");
-            
-            mockHttp.When("http://test.lvh.me/need-auth").WithHeaders(new Dictionary<string, string>() 
-                { 
-                    {"Authorization", $"Bearer {refreshedToken}"}
+
+            mockHttp.When("http://test.lvh.me/need-auth").WithHeaders(
+                new Dictionary<string, string>()
+                {
+                    { "Authorization", $"Bearer {refreshedToken}" }
                 })
                 .Respond(HttpStatusCode.OK, "application/json", "{'first_name' : 'Nick'}");
 
@@ -64,7 +66,7 @@ namespace AssemblyClientTests
             mockHttp.When("http://test.lvh.me/many-pages?page=2").Respond(HttpStatusCode.OK, "application/json", "{'current_page' : 2, 'next_page': null, 'data': []}");
             mockHttp.When("http://test.lvh.me/properties?page=1").Respond(HttpStatusCode.OK, "application/json", "{'current_page' : 1, 'next_page': null, 'data': [{'type':'student', 'first_name':'Nick'}]}");
             mockHttp.When("http://test.lvh.me/teaching-group/1").Respond(HttpStatusCode.OK, "application/json", "{ 'object': 'teaching_group', 'id': 1, 'name': '7x/Ma1', 'academic_year_id': 22, 'supervisor_ids': [ 1 ], 'student_ids': [ 15, 50, 109 ], 'subject': { 'object': 'subject', 'id': 2, 'code': 'MA', 'name': 'Mathematics' } } ");
-             
+
             client = new HttpClient(mockHttp)
             {
                 BaseAddress = new System.Uri("http://test.lvh.me")
@@ -77,7 +79,7 @@ namespace AssemblyClientTests
             var api = new Api(client);
             api.Configuration = config;
 
-            Assert.ThrowsAsync<HttpRequestException>(async () => 
+            Assert.ThrowsAsync<HttpRequestException>(async () =>
             {
                 await api.GetList<Student>("students", emptyArgs);
             });
@@ -89,9 +91,8 @@ namespace AssemblyClientTests
             var api = new Api(client);
             api.Configuration = config;
 
-            await api.load("correct-accept", emptyArgs);
+            await api.Load("correct-accept", emptyArgs);
         }
-
 
         [Test]
         public async Task ShouldGetWithTheSuppliedParameters()
@@ -103,7 +104,7 @@ namespace AssemblyClientTests
             args.a = 1;
             args.b = "2";
 
-            await api.load("with-params", args);
+            await api.Load("with-params", args);
         }
 
         [Test]
@@ -145,8 +146,8 @@ namespace AssemblyClientTests
             var api = new Api(client);
             api.Configuration = config;
 
-            var result = await api.load("/need-auth");
-            
+            var result = await api.Load("/need-auth");
+
             Assert.That(api.Configuration.Token, Is.EqualTo(refreshedToken));
         }
     }

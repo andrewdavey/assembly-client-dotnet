@@ -20,6 +20,7 @@ namespace AssemblyClient
         {
             return ((IDictionary<string, object>)me)[propertyName];
         }
+
         public static T V<T>(this ExpandoObject me, string propertyName)
         {
             return (T)((IDictionary<string, object>)me)[propertyName];

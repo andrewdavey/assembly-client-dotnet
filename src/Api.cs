@@ -14,11 +14,11 @@ namespace AssemblyClient
 
         public ApiConfiguration Configuration { get; set; }
 
-        internal EventHandler<TokenRefreshedEventArgs> TokenRefreshed;
+        public EventHandler<TokenRefreshedEventArgs> TokenRefreshed { get; set; }
 
         internal void OnTokenRefreshed(string newToken)
         {
-            if (TokenRefreshed != null) 
+            if (TokenRefreshed != null)
             {
                 TokenRefreshed(this, new TokenRefreshedEventArgs { Token = newToken });
             }
@@ -26,7 +26,6 @@ namespace AssemblyClient
 
         public Api()
         {
-
         }
 
         public Api(HttpClient client)
@@ -35,9 +34,9 @@ namespace AssemblyClient
             this.client.DefaultRequestHeaders.Add("Accept", "application/vnd.assembly+json; version=1");
         }
 
-        public virtual async Task<string> load(string resource)
+        public virtual async Task<string> Load(string resource)
         {
-            var result = await load(resource, new ExpandoObject());
+            var result = await Load(resource, new ExpandoObject());
             return result;
         }
 
@@ -55,8 +54,8 @@ namespace AssemblyClient
             var refreshedToken = response.Deserialize();
             return refreshedToken.access_token;
         }
-        
-        public virtual async Task<string> load(string resource, ExpandoObject args)
+
+        public virtual async Task<string> Load(string resource, ExpandoObject args)
         {
             var query = args.ToParams();
             var resourceWithQuery = $"{resource}";
@@ -81,20 +80,24 @@ namespace AssemblyClient
             }
             else
             {
-                response.EnsureSuccessStatusCode();    
+                response.EnsureSuccessStatusCode();
             }
 
             var result = response.Content.ReadAsStringAsync().Result;
-            return result; 
+            return result;
         }
 
         private ExpandoObject FormatData(IDictionary<string, object> me)
         {
             var target = (IDictionary<string, object>)new ExpandoObject();
 
-            foreach(var v in me)
+            foreach (var v in me)
             {
-                if (v.Key == "object") continue;
+                if (v.Key == "object")
+                {
+                    continue;
+                }
+
                 target.Add(v.Key.ToProperty(), v.Value);
             }
 
@@ -109,28 +112,27 @@ namespace AssemblyClient
 
             int? currentPage = 1;
 
-            while (currentPage.HasValue) 
+            while (currentPage.HasValue)
             {
                 pagedArgs.page = currentPage;
 
-                var data = await load(resource, pagedArgs);
+                var data = await Load(resource, pagedArgs);
 
                 var list = JsonConvert.DeserializeObject<ApiList<T>>(data);
 
-                results.AddRange(list.data);
+                results.AddRange(list.Data);
 
-                currentPage = list.next_page;
+                currentPage = list.NextPage;
             }
 
             return results;
         }
 
-
         public virtual async Task<T> GetObject<T>(string resource, ExpandoObject args)
         {
-            var data = await load(resource, args);
+            var data = await Load(resource, args);
             var obj = JsonConvert.DeserializeObject<T>(data);
             return obj;
-        } 
+        }
     }
 }

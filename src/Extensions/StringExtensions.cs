@@ -1,8 +1,5 @@
-using System;
-
 namespace AssemblyClient
 {
-
     public static class StringExtensions
     {
         public static byte[] GetBytes(this string me)
@@ -14,27 +11,37 @@ namespace AssemblyClient
 
         public static string ToProperty(this string me)
         {
-            var result =  me.Replace("_", " ").TitleCase().Replace(" ", "");
+            var result = me.Replace("_", " ").TitleCase().Replace(" ", string.Empty);
             return result;
         }
-        public static String TitleCase(this string me)
-        {
-            if (me == null) return me;
 
-            String[] words = me.Split(' ');
+        public static string TitleCase(this string me)
+        {
+            if (me == null)
+            {
+                return me;
+            }
+
+            string[] words = me.Split(' ');
+
             for (int i = 0; i < words.Length; i++)
             {
-                if (words[i].Length == 0) continue;
+                if (words[i].Length == 0)
+                {
+                    continue;
+                }
 
-                Char firstChar = Char.ToUpper(words[i][0]); 
-                String rest = "";
+                char firstChar = char.ToUpper(words[i][0]);
+                string rest = string.Empty;
                 if (words[i].Length > 1)
                 {
                     rest = words[i].Substring(1).ToLower();
                 }
+
                 words[i] = firstChar + rest;
             }
-            return String.Join(" ", words);
+
+            return string.Join(" ", words);
         }
     }
 }
