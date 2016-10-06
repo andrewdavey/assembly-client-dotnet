@@ -72,4 +72,6 @@ To run the tests `dotnet test`
 
 If on OSX run `dotnet test -f netstandard1.1`
 
+To run the tests continuously `dotnet watch test`
+
 Build and Release are automatically run on commits to master (and accepted Pull Requests).
