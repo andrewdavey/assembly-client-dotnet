@@ -85,5 +85,9 @@ namespace AssemblyClient
         public TeachingGroupsResource TeachingGroups => new TeachingGroupsResource(this);
 
         public RegistrationGroupsResource RegistrationGroups => new RegistrationGroupsResource(this);
+
+        public YearGroupsResource YearGroups => new YearGroupsResource(this);
+
+        public AcademicYearsResource AcademicYears => new AcademicYearsResource(this);
     }
 }

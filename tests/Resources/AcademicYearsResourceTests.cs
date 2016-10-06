@@ -1,4 +1,5 @@
 using System.Dynamic;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
@@ -51,6 +52,30 @@ namespace AssemblyClientTests
             var resource = new AcademicYearsResource(client);
             var results = await resource.List();
             Assert.That(results.Count, Is.EqualTo(academicYears.Count));
+
+            Mock.Get(client).VerifyAll();
+        }
+
+         [Test]
+        public async Task ShouldRequestAcademicYearsWithAnEmptyListOfTermsIfThereAreNoTerms()
+        {
+            var client = Mock.Of<ApiClient>();
+
+            IList<AcademicYear> academicYears = new List<AcademicYear>()
+            {
+                new AcademicYear()
+            };
+
+            Mock.Get(client).Setup(c => c.GetList<AcademicYear>(
+                AcademicYearsResource.ResourceName,
+                It.IsAny<ExpandoObject>())).Returns(Task.FromResult(academicYears)).Verifiable();
+
+            var resource = new AcademicYearsResource(client);
+            var results = await resource.List();
+            Assert.That(results.Count, Is.EqualTo(academicYears.Count));
+
+            var firstResult = results.First();
+            Assert.That(firstResult.Terms.Count, Is.EqualTo(0));
 
             Mock.Get(client).VerifyAll();
         }

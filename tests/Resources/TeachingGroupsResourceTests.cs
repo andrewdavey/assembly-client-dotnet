@@ -50,16 +50,16 @@ namespace AssemblyClientTests
             };
 
             var yearCode = "a";
-            var academicYearId = "123";
+            var subjectCode = "123";
 
             Mock.Get(client).Setup(c => c.GetList<TeachingGroup>(
                 "teaching_groups",
                 It.Is<ExpandoObject>(x =>
                 x.V<string>("year_code") == "a" &&
-                x.V<string>("academic_year_id") == academicYearId))).Returns(Task.FromResult(teachingGroups)).Verifiable();
+                x.V<string>("subject_code") == subjectCode))).Returns(Task.FromResult(teachingGroups)).Verifiable();
 
             var resource = new TeachingGroupsResource(client);
-            var results = await resource.List(academicYearId: academicYearId, yearCode: yearCode);
+            var results = await resource.List(subjectCode: subjectCode, yearCode: yearCode);
             Assert.That(results.Count, Is.EqualTo(teachingGroups.Count));
 
             Mock.Get(client).VerifyAll();

@@ -22,5 +22,10 @@ namespace AssemblyClient
 
         [JsonProperty("term_ids")]
         public IList<Term> Terms { get; set; }
+
+        public AcademicYear()
+        {
+            this.Terms = new List<Term>();
+        }
     }
 }

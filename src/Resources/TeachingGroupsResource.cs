@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Dynamic;
@@ -22,15 +23,18 @@ namespace AssemblyClient
             return results;
         }
 
-        public async Task<IList<TeachingGroup>> List(string academicYearId = null, string subjectCode = null, string yearCode = null, int? perPage = null)
+        public async Task<IList<TeachingGroup>> List(DateTime? date = null, DateTime? startDate = null, DateTime? endDate = null, string subjectCode = null, string yearCode = null, int? perPage = null)
         {
             var args = new ExpandoObject();
             var dArgs = (IDictionary<string, object>)args;
+            var dateFormat = "yyyy-MM-dd";
 
-            dArgs.Add("academic_year_id", academicYearId);
+            dArgs.Add("date", date?.ToString(dateFormat));
+            dArgs.Add("start_date", startDate?.ToString(dateFormat));
+            dArgs.Add("end_date", endDate?.ToString(dateFormat));
             dArgs.Add("subject_code", subjectCode);
             dArgs.Add("year_code", yearCode);
-            dArgs.Add("perPage", perPage);
+            dArgs.Add("per_page", perPage);
 
             var results = await client.GetList<TeachingGroup>(ResourceName, args);
 

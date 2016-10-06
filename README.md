@@ -30,19 +30,30 @@ var config = new ApiConfiguration()
 var client = new ApiClient(AssemblyEnvironment.Sandbox);
 client.Configure(config);
 
+
+// Registration Groups
+
 // Fetch registration groups, filtered by a year group.
 var regGroups = await client.RegistrationGroups.List(yearCode: "7");
 
+foreach (var group in regGroups)
+{
+    Console.WriteLine($"Group Name: {group.Name}");
+}
+
+
+// Teaching Groups
+
 // Fetch all teaching groups (you may know these as classes) for the mathematics subject code.
 var mathsGroups = await client.TeachingGroups.List(subjectCode: "MA");
-
-// You can also apply a date filter to get, say, teaching groups from last academic year or for another specific range of time.
-var mathsGroups = await client.TeachingGroups.List(startDate: DateTime.Parse("2016-09-01"), endDate: DateTime.Parse("2017-07-31"));
 
 foreach (var group in mathsGroups)
 {
     Console.WriteLine($"Group Name: {group.Name}");
 }
+
+// You can also apply a date filter to get, say, teaching groups from last academic year or for another specific range of time.
+var mathsGroupsFiltered = await client.TeachingGroups.List(startDate: DateTime.Parse("2016-09-01"), endDate: DateTime.Parse("2017-07-31"));
 
 // Fetch all the students for this teaching group.
 var mathsStudents = await mathsGroups.First().Students();
@@ -52,13 +63,34 @@ foreach (var student in mathsStudents)
     Console.WriteLine($"{student.LastName}, {student.FirstName} ({student.YearCode})");
 }
 
-// ...or fetch all students filtered by year code/year group
+
+// Students
+
+// Fetch all students filtered by year code/year group
 var year7Students = await client.Students.List(yearCode: "7");
 
 foreach (var student in year7Students)
 {
     Console.WriteLine($"{student.LastName}, {student.FirstName} ({student.YearCode})");
 }
+
+
+// Year Groups
+
+// Fetch all the year groups.
+var yearGroups = await client.YearGroups.List();
+
+// Fetch the students for this particular year group.
+var yearGroupStudents = await yearGroups.First().Students();
+
+
+// Academic Years
+
+// Fetch all the academic years
+var academicYears = await client.AcademicYears.List();
+
+// View the terms for this academic year
+var firstYearTerms = academicYears.First().Terms;
 
 ```
 
