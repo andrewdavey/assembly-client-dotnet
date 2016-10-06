@@ -9,6 +9,7 @@
     "summary": "A .NET client for the Assembly Platform http://developers.assembly.education"
   },
   "buildOptions": {
+    "warningsAsErrors": true,
     "xmlDoc": "true",
     "additionalArguments": [ "/ruleset:stylecop.ruleset" ]
   },
