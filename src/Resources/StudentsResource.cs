@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace AssemblyClient
 {
-    public class StudentsResource
+    public class StudentsResource : Resource
     {
         public const string ResourceName = "students";
 

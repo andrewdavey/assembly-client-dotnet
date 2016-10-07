@@ -31,6 +31,8 @@ var client = new ApiClient(AssemblyEnvironment.Sandbox);
 client.Configure(config);
 
 
+// -----------------------------------------------------------------
+
 // Registration Groups
 
 // Fetch registration groups, filtered by a year group.
@@ -41,6 +43,7 @@ foreach (var group in regGroups)
     Console.WriteLine($"Group Name: {group.Name}");
 }
 
+// -----------------------------------------------------------------
 
 // Teaching Groups
 
@@ -63,6 +66,7 @@ foreach (var student in mathsStudents)
     Console.WriteLine($"{student.LastName}, {student.FirstName} ({student.YearCode})");
 }
 
+// -----------------------------------------------------------------
 
 // Students
 
@@ -74,15 +78,22 @@ foreach (var student in year7Students)
     Console.WriteLine($"{student.LastName}, {student.FirstName} ({student.YearCode})");
 }
 
+// -----------------------------------------------------------------
 
 // Year Groups
 
 // Fetch all the year groups.
 var yearGroups = await client.YearGroups.List();
 
+foreach (var yearGroup in yearGroups)
+{
+    Console.WriteLine($"{yearGroup.Code} {yearGroup.Name}");
+}
+
 // Fetch the students for this particular year group.
 var yearGroupStudents = await yearGroups.First().Students();
 
+// -----------------------------------------------------------------
 
 // Academic Years
 
@@ -91,6 +102,17 @@ var academicYears = await client.AcademicYears.List();
 
 // View the terms for this academic year
 var firstYearTerms = academicYears.First().Terms;
+
+// -----------------------------------------------------------------
+
+// Staff Members
+
+var staffMembers = await client.StaffMembers.All();
+
+foreach (var staffMember in staffMembers)
+{
+    Console.WriteLine($"{staffMember.LastName}, {staffMember.FirstName} ({staffMember.IsTeachingStaff})");
+}
 
 ```
 

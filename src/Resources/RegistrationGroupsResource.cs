@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AssemblyClient
 {
-    public class RegistrationGroupsResource
+    public class RegistrationGroupsResource : Resource
     {
         public const string ResourceName = "registration_groups";
 
@@ -27,12 +27,11 @@ namespace AssemblyClient
         {
             var args = new ExpandoObject();
             var dArgs = (IDictionary<string, object>)args;
-            var dateFormat = "yyyy-MM-dd";
 
             dArgs.Add("year_code", yearCode);
-            dArgs.Add("date", date?.ToString(dateFormat));
-            dArgs.Add("start_date", startDate?.ToString(dateFormat));
-            dArgs.Add("end_date", endDate?.ToString(dateFormat));
+            dArgs.Add("date", date?.ToString(DateFormat));
+            dArgs.Add("start_date", startDate?.ToString(DateFormat));
+            dArgs.Add("end_date", endDate?.ToString(DateFormat));
             dArgs.Add("per_page", perPage);
 
             var results = await client.GetList<RegistrationGroup>(ResourceName, args);

@@ -30,7 +30,7 @@ namespace AssemblyClientTests
                 new RegistrationGroup(), new RegistrationGroup()
             };
 
-            Mock.Get(client).Setup(c => c.GetList<RegistrationGroup>("registration_groups", It.IsAny<ExpandoObject>())).Returns(Task.FromResult(groups));
+            Mock.Get(client).Setup(c => c.GetList<RegistrationGroup>(RegistrationGroupsResource.ResourceName, It.IsAny<ExpandoObject>())).Returns(Task.FromResult(groups));
 
             var resource = new RegistrationGroupsResource(client);
 
@@ -52,7 +52,7 @@ namespace AssemblyClientTests
             var yearCode = "a";
 
             Mock.Get(client).Setup(c => c.GetList<RegistrationGroup>(
-                "registration_groups",
+                RegistrationGroupsResource.ResourceName,
                 It.Is<ExpandoObject>(x =>
                 x.V<string>("year_code") == "a"))).Returns(Task.FromResult(registrationGroups)).Verifiable();
 

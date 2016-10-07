@@ -80,14 +80,16 @@ namespace AssemblyClient
             this.api.Configuration = config;
         }
 
+        public AcademicYearsResource AcademicYears => new AcademicYearsResource(this);
+
         public StudentsResource Students => new StudentsResource(this);
+
+        public StaffMembersResource StaffMembers => new StaffMembersResource(this);
 
         public TeachingGroupsResource TeachingGroups => new TeachingGroupsResource(this);
 
         public RegistrationGroupsResource RegistrationGroups => new RegistrationGroupsResource(this);
 
         public YearGroupsResource YearGroups => new YearGroupsResource(this);
-
-        public AcademicYearsResource AcademicYears => new AcademicYearsResource(this);
     }
 }

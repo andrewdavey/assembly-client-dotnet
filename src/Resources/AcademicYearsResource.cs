@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AssemblyClient
 {
-    public class AcademicYearsResource
+    public class AcademicYearsResource : Resource
     {
         public static string ResourceName => "academic_years";
 

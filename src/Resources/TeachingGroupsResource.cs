@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AssemblyClient
 {
-    public class TeachingGroupsResource
+    public class TeachingGroupsResource : Resource
     {
         public const string ResourceName = "teaching_groups";
 
@@ -27,11 +27,10 @@ namespace AssemblyClient
         {
             var args = new ExpandoObject();
             var dArgs = (IDictionary<string, object>)args;
-            var dateFormat = "yyyy-MM-dd";
 
-            dArgs.Add("date", date?.ToString(dateFormat));
-            dArgs.Add("start_date", startDate?.ToString(dateFormat));
-            dArgs.Add("end_date", endDate?.ToString(dateFormat));
+            dArgs.Add("date", date?.ToString(DateFormat));
+            dArgs.Add("start_date", startDate?.ToString(DateFormat));
+            dArgs.Add("end_date", endDate?.ToString(DateFormat));
             dArgs.Add("subject_code", subjectCode);
             dArgs.Add("year_code", yearCode);
             dArgs.Add("per_page", perPage);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AssemblyClient
 {
-    public class YearGroupsResource
+    public class YearGroupsResource : Resource
     {
         public const string ResourceName = "year_groups";
 

@@ -1228,11 +1228,11 @@
           "lib/netstandard1.3/_._": {}
         }
       },
-      "System.Runtime.Serialization.Json/4.0.2-rc2-24027": {
+      "System.Runtime.Serialization.Json/4.0.2": {
         "type": "package",
         "dependencies": {
-          "System.IO": "4.1.0-rc2-24027",
-          "System.Runtime": "4.1.0-rc2-24027"
+          "System.IO": "4.1.0",
+          "System.Runtime": "4.1.0"
         },
         "compile": {
           "ref/netstandard1.0/System.Runtime.Serialization.Json.dll": {}
@@ -4849,11 +4849,12 @@
         "ref/xamarinwatchos10/_._"
       ]
     },
-    "System.Runtime.Serialization.Json/4.0.2-rc2-24027": {
-      "sha512": "oz3igElSCwudR+Cmsp+B4fNOjtMFHLS+XktmsTsjcqsC8v9dX9p+Se/J8YFEmCUEff2qQHVQXRiBsEFLPuu4jA==",
+    "System.Runtime.Serialization.Json/4.0.2": {
+      "sha512": "+7DIJhnKYgCzUgcLbVTtRQb2l1M0FP549XFlFkQM5lmNiUBl44AfNbx4bz61xA8PzLtlYwfmif4JJJW7MPPnjg==",
       "type": "package",
+      "path": "System.Runtime.Serialization.Json/4.0.2",
       "files": [
-        "System.Runtime.Serialization.Json.4.0.2-rc2-24027.nupkg.sha512",
+        "System.Runtime.Serialization.Json.4.0.2.nupkg.sha512",
         "System.Runtime.Serialization.Json.nuspec",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
@@ -6009,7 +6010,7 @@
   "projectFileDependencyGroups": {
     "": [
       "System.Console >= 4.0.0",
-      "System.Runtime.Serialization.Json >= 4.0.2-rc2-24027"
+      "System.Runtime.Serialization.Json >= 4.0.2"
     ],
     ".NETStandard,Version=v1.1": [
       "Microsoft.NETCore.App >= 1.0.0"

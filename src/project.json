@@ -1,10 +1,10 @@
 {
   "version": "1.0.0-*",
-  "buildOptions": { },
   "dependencies": {
-    "System.Runtime.Serialization.Json": "4.0.2-rc2-24027",
+    "System.Runtime.Serialization.Json": "4.0.2",
     "System.Console": "4.0.0"
   },
+  "buildOptions": { },
   "frameworks": {
     "netstandard1.1": {
       "imports": [
