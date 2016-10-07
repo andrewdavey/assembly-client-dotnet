@@ -9,11 +9,9 @@ namespace AssemblyClient
     {
         public const string ResourceName = "staff_members";
 
-        private readonly ApiClient client;
-
         public StaffMembersResource(ApiClient client)
+            : base(client)
         {
-            this.client = client;
         }
 
         public Task<IList<StaffMember>> All()
@@ -30,7 +28,7 @@ namespace AssemblyClient
             args.teachers_only = teachersOnly;
             args.perPage = perPage;
 
-            var results = await client.GetList<StaffMember>(ResourceName, args);
+            var results = await Client.GetList<StaffMember>(ResourceName, args);
             return results;
         }
     }

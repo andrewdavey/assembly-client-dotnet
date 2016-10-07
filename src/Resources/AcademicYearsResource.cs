@@ -9,11 +9,9 @@ namespace AssemblyClient
     {
         public static string ResourceName => "academic_years";
 
-        private readonly ApiClient client;
-
         public AcademicYearsResource(ApiClient client)
+            : base(client)
         {
-            this.client = client;
         }
 
         public async Task<IList<AcademicYear>> All()
@@ -29,7 +27,7 @@ namespace AssemblyClient
 
             dArgs.Add("per_page", perPage);
 
-            var results = await client.GetList<AcademicYear>(ResourceName, args);
+            var results = await Client.GetList<AcademicYear>(ResourceName, args);
 
             var configuredresults = results.Select((r) =>
             {
