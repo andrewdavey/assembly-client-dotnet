@@ -92,7 +92,7 @@ namespace AssemblyClientTests
             var api = new Api(client);
             api.Configuration = config;
 
-            Assert.ThrowsAsync<HttpRequestException>(async () =>
+            Assert.ThrowsAsync<HttpResponseDetailedException>(async () =>
             {
                 await api.GetList<Student>("students", emptyArgs);
             });

@@ -1,4 +1,3 @@
-using System;
 using System.Dynamic;
 using System.Net;
 using System.Net.Http;
@@ -15,7 +14,29 @@ namespace AssemblyClient
                 throw new RequestThrottledException("Request throttled");
             }
 
-            me.EnsureSuccessStatusCode();
+            me.EnsureSuccessfulStatusCode();
+        }
+
+        public static void EnsureSuccessfulStatusCode(this HttpResponseMessage response)
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                return;
+            }
+
+            var content = string.Empty;
+
+            if (response.Content != null)
+            {
+                content = response.Content.ReadAsStringAsync().Result;
+            }
+
+            if (response.Content != null)
+            {
+                response.Content.Dispose();
+            }
+
+            throw new HttpResponseDetailedException(response.StatusCode, content);
         }
 
         public static dynamic Deserialize(this HttpResponseMessage me)
