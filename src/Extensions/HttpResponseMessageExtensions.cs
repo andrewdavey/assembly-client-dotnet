@@ -1,14 +1,23 @@
+using System;
 using System.Dynamic;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace AssemblyClient
 {
     public static class HttpResponseMessageExtensions
     {
+        public static void EnsurePlatformSuccess(this HttpResponseMessage me)
+        {
+            if (me.StatusCode == (HttpStatusCode)429)
+            {
+                throw new RequestThrottledException("Request throttled");
+            }
+
+            me.EnsureSuccessStatusCode();
+        }
+
         public static dynamic Deserialize(this HttpResponseMessage me)
         {
             var result = me.Content.ReadAsStringAsync().Result;

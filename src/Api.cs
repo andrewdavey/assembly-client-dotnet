@@ -1,6 +1,7 @@
 using System;
 using System.Dynamic;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -76,11 +77,11 @@ namespace AssemblyClient
                 OnTokenRefreshed(newToken);
 
                 response = await client.MakeRequest(resourceWithQuery, Configuration.Token);
-                response.EnsureSuccessStatusCode();
+                response.EnsurePlatformSuccess();
             }
             else
             {
-                response.EnsureSuccessStatusCode();
+                response.EnsurePlatformSuccess();
             }
 
             var result = response.Content.ReadAsStringAsync().Result;

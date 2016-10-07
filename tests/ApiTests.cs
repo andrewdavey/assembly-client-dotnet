@@ -66,11 +66,24 @@ namespace AssemblyClientTests
             mockHttp.When("http://test.lvh.me/many-pages?page=2").Respond(HttpStatusCode.OK, "application/json", "{'current_page' : 2, 'next_page': null, 'data': []}");
             mockHttp.When("http://test.lvh.me/properties?page=1").Respond(HttpStatusCode.OK, "application/json", "{'current_page' : 1, 'next_page': null, 'data': [{'type':'student', 'first_name':'Nick'}]}");
             mockHttp.When("http://test.lvh.me/teaching-group/1").Respond(HttpStatusCode.OK, "application/json", "{ 'object': 'teaching_group', 'id': 1, 'name': '7x/Ma1', 'academic_year_id': 22, 'supervisor_ids': [ 1 ], 'student_ids': [ 15, 50, 109 ], 'subject': { 'object': 'subject', 'id': 2, 'code': 'MA', 'name': 'Mathematics' } } ");
+            mockHttp.When("http://test.lvh.me/throttle").Respond((HttpStatusCode)429, "application/json", "{}");
 
             client = new HttpClient(mockHttp)
             {
                 BaseAddress = new System.Uri("http://test.lvh.me")
             };
+        }
+
+        [Test]
+        public void ShouldThrowAnExepctionIfTheRequestIsThrottled()
+        {
+            var api = new Api(client);
+            api.Configuration = config;
+
+            Assert.ThrowsAsync<RequestThrottledException>(async () =>
+            {
+                await api.Load("throttle", emptyArgs);
+            });
         }
 
         [Test]
