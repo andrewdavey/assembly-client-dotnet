@@ -129,3 +129,7 @@ If on OSX run `dotnet test -f netstandard1.1`
 To run the tests continuously `dotnet watch test`
 
 Build and Release are automatically run on commits to master (and accepted Pull Requests).
+
+Branch commits and pull requests are automatically released under pre release versions to: https://www.myget.org/F/assembly-client-dotnet/api/v3/index.json
+
+If you want to test before releasing then you can use this feed to access development versions.
