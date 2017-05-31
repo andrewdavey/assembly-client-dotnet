@@ -82,6 +82,10 @@ namespace AssemblyClient
 
         public AcademicYearsResource AcademicYears => new AcademicYearsResource(this);
 
+        public SchoolDetailsResource School => new SchoolDetailsResource(this);
+
+        public SubjectsResource Subjects => new SubjectsResource(this);
+
         public StudentsResource Students => new StudentsResource(this);
 
         public StaffMembersResource StaffMembers => new StaffMembersResource(this);

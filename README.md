@@ -114,6 +114,20 @@ foreach (var staffMember in staffMembers)
     Console.WriteLine($"{staffMember.LastName}, {staffMember.FirstName} ({staffMember.IsTeachingStaff})");
 }
 
+// -----------------------------------------------------------------
+
+// Subjects
+
+// Fetch all the subjects
+var subjects = await client.Subjects.List();
+
+// -----------------------------------------------------------------
+
+// School Details
+
+// Fetch the school details
+var schoolDetails = await client.School.Details();
+
 ```
 
 ## Development
