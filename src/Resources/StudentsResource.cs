@@ -6,13 +6,11 @@ namespace AssemblyClient
 {
     public class StudentsResource : Resource
     {
-        public const string ResourceName = "students";
-
-        private readonly ApiClient client;
+        public static string ResourceName => "students";
 
         public StudentsResource(ApiClient client)
+            : base(client)
         {
-            this.client = client;
         }
 
         public Task<IList<Student>> All()
@@ -30,7 +28,7 @@ namespace AssemblyClient
             args.demographics = demographics;
             args.perPage = perPage;
 
-            var results = await client.GetList<Student>(ResourceName, args);
+            var results = await Client.GetList<Student>(ResourceName, args);
             return results;
         }
 
@@ -40,7 +38,7 @@ namespace AssemblyClient
             args.demographics = demographics;
 
             var resource = $"{ResourceName}/{studentId}";
-            var result = await client.GetObject<Student>(resource, args);
+            var result = await Client.GetObject<Student>(resource, args);
 
             return result;
         }

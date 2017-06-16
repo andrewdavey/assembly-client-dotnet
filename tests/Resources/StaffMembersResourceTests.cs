@@ -46,12 +46,12 @@ namespace AssemblyClientTests
             };
 
             DateTime date = DateTime.Now;
-            var dataTimeString = date.ToString(Resource.DateFormat);
+            var dateTimeString = date.ToString(Resource.DateFormat);
 
             Mock.Get(client).Setup(c => c.GetList<StaffMember>(
                 StaffMembersResource.ResourceName,
                 It.Is<ExpandoObject>(x =>
-                x.V<string>("date") == dataTimeString &&
+                x.V<string>("date") == dateTimeString &&
                 x.V<bool>("teachers_only") == true))).Returns(Task.FromResult(mockResults)).Verifiable();
 
             var resource = new StaffMembersResource(client);

@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace AssemblyClient
 {
-    public class SubjectsResource : ListResource<Subject>
+    public class AssessmentsResource : ListResource<Assessment>
     {
-        public static string ResourceName => "subjects";
+        public static string ResourceName => "assessments";
 
-        public SubjectsResource(ApiClient client)
+        public AssessmentsResource(ApiClient client)
             : base(client, ResourceName)
         {
         }

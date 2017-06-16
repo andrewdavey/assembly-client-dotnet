@@ -9,17 +9,15 @@ namespace AssemblyClient
     {
         public static string ResourceName => "school_details";
 
-        private readonly ApiClient client;
-
         public SchoolDetailsResource(ApiClient client)
+            : base(client)
         {
-            this.client = client;
         }
 
         public async Task<School> Details()
         {
             dynamic args = new ExpandoObject();
-            var result = await client.GetObject<School>(ResourceName, args);
+            var result = await Client.GetObject<School>(ResourceName, args);
 
             return result;
         }

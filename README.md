@@ -123,6 +123,55 @@ var subjects = await client.Subjects.List();
 
 // -----------------------------------------------------------------
 
+// Aspects
+
+// Fetch all the aspects
+var aspects = await client.Aspects.List();
+
+// -----------------------------------------------------------------
+
+// Assessment Points
+
+// Fetch all the assessment points
+var assessmentPoints = await client.AssessmentPoints.List();
+
+// -----------------------------------------------------------------
+
+// Assessments
+
+// Fetch all the assessments
+var assessments = await client.Assessments.List();
+
+// -----------------------------------------------------------------
+
+// Grade Sets
+
+// Fetch all the grade sets
+var gradeSets = await client.GradeSets.List();
+
+// -----------------------------------------------------------------
+
+// Results
+
+// Write a set of results in one batch (maximum of 50 results at one time)
+var resultsBatch = new ResultsBatch
+{
+    AspectId = 1,
+    AssessmentId = 1,
+    AssessmentPointRank = 1,
+    SubjectId = 1
+};
+resultsBatch.AddResult(studentId: 1, gradeId: 1);
+resultsBatch.AddResult(studentId: 2, gradeId: 1);
+
+var response = await client.Results.WriteResults(resultsBatch);
+
+// Fetch all the results for a given list of students
+var studentIds = new List<int> {1, 2, 3};
+var results = await client.Results.List(studentIds);
+
+// -----------------------------------------------------------------
+
 // School Details
 
 // Fetch the school details

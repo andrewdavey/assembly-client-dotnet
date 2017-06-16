@@ -71,6 +71,18 @@ namespace AssemblyClientTests
         }
 
         [Test]
+        public async Task ShouldPostDataToTheApi()
+        {
+            Mock.Get(api)
+                .Setup(x => x.PostData<string>(resource, It.IsAny<object>()))
+                .Returns(Task.FromResult("success"))
+                .Verifiable();
+
+            var result = await client.PostData<string>(resource, new Student());
+            Assert.That(result, Is.EqualTo("success"));
+        }
+
+        [Test]
         public async Task ShouldGetAListFromTheApi()
         {
             Mock.Get(api)

@@ -9,11 +9,9 @@ namespace AssemblyClient
     {
         public static string ResourceName => "academic_years";
 
-        private readonly ApiClient client;
-
         public AcademicYearsResource(ApiClient client)
+            : base(client)
         {
-            this.client = client;
         }
 
         public async Task<IList<AcademicYear>> All()
@@ -22,22 +20,16 @@ namespace AssemblyClient
             return results;
         }
 
-        public async Task<IList<AcademicYear>> List(int? perPage = null)
+        public async Task<IList<AcademicYear>> List(bool? includeTerms = false, int? perPage = null)
         {
             var args = new ExpandoObject();
             var dArgs = (IDictionary<string, object>)args;
 
             dArgs.Add("per_page", perPage);
+            dArgs.Add("terms", includeTerms);
 
-            var results = await client.GetList<AcademicYear>(ResourceName, args);
-
-            var configuredresults = results.Select((r) =>
-            {
-                r.Resource = this;
-                return r;
-            }).ToList();
-
-            return configuredresults;
+            var results = await Client.GetList<AcademicYear>(ResourceName, args);
+            return results;
         }
     }
 }

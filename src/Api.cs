@@ -34,6 +34,30 @@ namespace AssemblyClient
             this.client.DefaultRequestHeaders.Add("Accept", "application/vnd.assembly+json; version=1");
         }
 
+        public virtual async Task<T> PostData<T>(string uri, object data)
+        {
+            var response = await client.PostData(uri, Configuration.Token, data);
+            var isTokenValid = response.IsValidToken();
+
+            if (!isTokenValid)
+            {
+                var newToken = RefreshToken(Configuration.RefreshToken);
+                Configuration.Token = newToken;
+
+                OnTokenRefreshed(newToken);
+
+                response = await client.PostData(uri, Configuration.Token, data);
+                response.EnsurePlatformSuccess();
+            }
+            else
+            {
+                response.EnsurePlatformSuccess();
+            }
+
+            var result = response.Deserialize<T>();
+            return result;
+        }
+
         public virtual async Task<string> Load(string resource)
         {
             var result = await Load(resource, new ExpandoObject());
@@ -45,9 +69,7 @@ namespace AssemblyClient
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Configuration.BasicAuth);
 
             var refreshRequest = new ApiGrant(refreshToken);
-            var refreshData = JsonConvert.SerializeObject(refreshRequest);
-            var body = new StringContent(refreshData, Encoding.UTF8, "application/json");
-            var response = client.PostAsync("/oauth/token", body).Result;
+            var response = client.PostData("/oauth/token", Configuration.Token, refreshRequest).Result;
 
             response.EnsureSuccessStatusCode();
 

@@ -41,8 +41,13 @@ namespace AssemblyClient
 
         public static dynamic Deserialize(this HttpResponseMessage me)
         {
+            return me.Deserialize<ExpandoObject>();
+        }
+
+        public static T Deserialize<T>(this HttpResponseMessage me)
+        {
             var result = me.Content.ReadAsStringAsync().Result;
-            var data = JsonConvert.DeserializeObject<ExpandoObject>(result);
+            var data = JsonConvert.DeserializeObject<T>(result);
             return data;
         }
 

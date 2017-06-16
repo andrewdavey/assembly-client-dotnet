@@ -8,13 +8,11 @@ namespace AssemblyClient
 {
     public class RegistrationGroupsResource : Resource
     {
-        public const string ResourceName = "registration_groups";
-
-        private readonly ApiClient client;
+        public static string ResourceName => "registration_groups";
 
         public RegistrationGroupsResource(ApiClient client)
+            : base(client)
         {
-            this.client = client;
         }
 
         public async Task<IList<RegistrationGroup>> All()
@@ -34,7 +32,7 @@ namespace AssemblyClient
             dArgs.Add("end_date", endDate?.ToString(DateFormat));
             dArgs.Add("per_page", perPage);
 
-            var results = await client.GetList<RegistrationGroup>(ResourceName, args);
+            var results = await Client.GetList<RegistrationGroup>(ResourceName, args);
 
             var configuredresults = results.Select((r) =>
             {
@@ -50,7 +48,7 @@ namespace AssemblyClient
             dynamic args = new ExpandoObject();
 
             var resource = $"{ResourceName}/{groupId}";
-            var result = await client.GetObject<RegistrationGroup>(resource, args);
+            var result = await Client.GetObject<RegistrationGroup>(resource, args);
             result.Resource = this;
 
             return result;
@@ -63,7 +61,7 @@ namespace AssemblyClient
             args.per_page = perPage;
 
             var resource = $"{ResourceName}/{groupId}/students";
-            var results = await client.GetList<Student>(resource, args);
+            var results = await Client.GetList<Student>(resource, args);
 
             return results;
         }

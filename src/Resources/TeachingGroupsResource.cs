@@ -8,13 +8,11 @@ namespace AssemblyClient
 {
     public class TeachingGroupsResource : Resource
     {
-        public const string ResourceName = "teaching_groups";
-
-        private readonly ApiClient client;
+        public static string ResourceName => "teaching_groups";
 
         public TeachingGroupsResource(ApiClient client)
+            : base(client)
         {
-            this.client = client;
         }
 
         public async Task<IList<TeachingGroup>> All()
@@ -35,7 +33,7 @@ namespace AssemblyClient
             dArgs.Add("year_code", yearCode);
             dArgs.Add("per_page", perPage);
 
-            var results = await client.GetList<TeachingGroup>(ResourceName, args);
+            var results = await Client.GetList<TeachingGroup>(ResourceName, args);
 
             var configuredresults = results.Select((r) =>
             {
@@ -51,7 +49,7 @@ namespace AssemblyClient
             dynamic args = new ExpandoObject();
 
             var resource = $"{ResourceName}/{groupId}";
-            var result = await client.GetObject<TeachingGroup>(resource, args);
+            var result = await Client.GetObject<TeachingGroup>(resource, args);
             result.Resource = this;
 
             return result;
@@ -64,7 +62,7 @@ namespace AssemblyClient
             args.perPage = perPage;
 
             var resource = $"{ResourceName}/{groupId}/students";
-            var results = await client.GetList<Student>(resource, args);
+            var results = await Client.GetList<Student>(resource, args);
 
             return results;
         }

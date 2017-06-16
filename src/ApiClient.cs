@@ -63,6 +63,12 @@ namespace AssemblyClient
             this.api = api;
         }
 
+        public virtual async Task<T> PostData<T>(string uri, object data)
+        {
+            var result = await api.PostData<T>(uri, data);
+            return result;
+        }
+
         public virtual async Task<IList<T>> GetList<T>(string resource, ExpandoObject args)
         {
             var results = await api.GetList<T>(resource, args);
@@ -82,17 +88,27 @@ namespace AssemblyClient
 
         public AcademicYearsResource AcademicYears => new AcademicYearsResource(this);
 
+        public AspectsResource Aspects => new AspectsResource(this);
+
+        public AssessmentPointsResource AssessmentPoints => new AssessmentPointsResource(this);
+
+        public AssessmentsResource Assessments => new AssessmentsResource(this);
+
+        public GradeSetsResource GradeSets => new GradeSetsResource(this);
+
+        public RegistrationGroupsResource RegistrationGroups => new RegistrationGroupsResource(this);
+
+        public ResultsResource Results => new ResultsResource(this);
+
         public SchoolDetailsResource School => new SchoolDetailsResource(this);
-
-        public SubjectsResource Subjects => new SubjectsResource(this);
-
-        public StudentsResource Students => new StudentsResource(this);
 
         public StaffMembersResource StaffMembers => new StaffMembersResource(this);
 
-        public TeachingGroupsResource TeachingGroups => new TeachingGroupsResource(this);
+        public StudentsResource Students => new StudentsResource(this);
 
-        public RegistrationGroupsResource RegistrationGroups => new RegistrationGroupsResource(this);
+        public SubjectsResource Subjects => new SubjectsResource(this);
+
+        public TeachingGroupsResource TeachingGroups => new TeachingGroupsResource(this);
 
         public YearGroupsResource YearGroups => new YearGroupsResource(this);
     }

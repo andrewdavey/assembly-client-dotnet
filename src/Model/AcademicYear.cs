@@ -20,7 +20,7 @@ namespace AssemblyClient
         [JsonProperty("end_date")]
         public DateTime EndDate { get; set; }
 
-        [JsonProperty("term_ids")]
+        [JsonProperty("terms")]
         public IList<Term> Terms { get; set; }
 
         public AcademicYear()
