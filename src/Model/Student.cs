@@ -24,5 +24,19 @@ namespace AssemblyClient
 
         [JsonProperty("upn")]
         public string UPN { get; set; }
+
+        [JsonProperty("mis_id")]
+        public string MisId { get; set; }
+
+        [JsonProperty("pan")]
+        public string PupilAdmissionNumber { get; set; }
+
+        [JsonProperty("demographics")]
+        public StudentDemographics Demographics { get; }
+
+        public Student()
+        {
+            this.Demographics = new StudentDemographics();
+        }
     }
 }

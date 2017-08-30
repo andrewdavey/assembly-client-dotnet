@@ -71,7 +71,7 @@ foreach (var student in mathsStudents)
 // Students
 
 // Fetch all students filtered by year code/year group
-var year7Students = await client.Students.List(yearCode: "7");
+var year7Students = await client.Students.List(yearCode: "7", demographics: true);
 
 foreach (var student in year7Students)
 {

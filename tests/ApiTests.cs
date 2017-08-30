@@ -163,5 +163,20 @@ namespace AssemblyClientTests
 
             Assert.That(api.Configuration.Token, Is.EqualTo(refreshedToken));
         }
+
+        [Test]
+        public void ShouldCreateQueryStringCorrectly()
+        {
+            dynamic args = new ExpandoObject();
+
+            args.academic_year_id = 10;
+            args.year_code = "7";
+            args.demographics = true;
+            args.perPage = 50;
+
+            var result = ExpandoObjectExtensions.ToParams(args);
+
+            Assert.That(result, Is.EqualTo("academic_year_id=10&year_code=7&demographics=1&perPage=50"));
+        }
     }
 }

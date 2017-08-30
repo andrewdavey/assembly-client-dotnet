@@ -10,8 +10,24 @@ namespace AssemblyClient
         {
             var x = (IDictionary<string, object>)me;
             var valueArgs = x.Where(v => v.Value != null);
-            var args = valueArgs.Select((v) => $"{v.Key}={v.Value}").ToArray();
+            var args = valueArgs.Select(AsQueryParam).ToArray();
             var result = string.Join("&", args);
+            return result;
+        }
+
+        private static string AsQueryParam(KeyValuePair<string, object> kvp)
+        {
+            var result = $"{kvp.Key}=";
+            if (kvp.Value is bool?)
+            {
+                var boolValue = kvp.Value as bool?;
+                result += boolValue.HasValue && boolValue.Value ? "1" : "0";
+            }
+            else
+            {
+                result += $"{kvp.Value}";
+            }
+
             return result;
         }
 
