@@ -24,5 +24,8 @@ namespace AssemblyClient
 
         [JsonProperty("sen_category")]
         public string SenCategory { get; set; }
+
+        [JsonProperty("in_care")]
+        public bool? InCare { get; set; }
     }
 }
