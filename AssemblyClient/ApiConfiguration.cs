@@ -17,7 +17,7 @@ namespace AssemblyClient
             get
             {
                 var credentials = $"{ClientId}:{ClientSecret}";
-                var bytes = Portable.Text.ASCIIEncoding.ASCII.GetBytes(credentials);
+                var bytes = System.Text.Encoding.ASCII.GetBytes(credentials);
                 var authString = Convert.ToBase64String(bytes);
                 return authString;
             }
