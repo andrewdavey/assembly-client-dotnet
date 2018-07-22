@@ -48,15 +48,17 @@ namespace AssemblyClientTests
                 SubjectId = 1
             };
 
+            var expectedResponse = new ResultsWriteResponse();
+
             Mock.Get(client)
-                .Setup(c => c.PostData<string>(ResultsResource.ResourceName, It.IsAny<ResultsBatch>()))
+                .Setup(c => c.PostData<ResultsWriteResponse>(ResultsResource.ResourceName, It.IsAny<ResultsBatch>()))
                 .Callback((string res, object obj) => subjectId = ((ResultsBatch)obj).SubjectId)
-                .Returns(Task.FromResult("success"));
+                .Returns(Task.FromResult(expectedResponse));
 
             var resource = new ResultsResource(client);
             var response = await resource.WriteResults(resultsBatch);
             Assert.That(subjectId, Is.EqualTo(1));
-            Assert.That(response, Is.EqualTo("success"));
+            Assert.That(response, Is.SameAs(expectedResponse));
 
             Mock.Get(client).VerifyAll();
         }
