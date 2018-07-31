@@ -13,6 +13,6 @@ namespace AssemblyClient
         public string Name { get; set; }
 
         [JsonProperty("value")]
-        public int Value { get; set; }
+        public int? Value { get; set; }
     }
 }
