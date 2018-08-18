@@ -36,24 +36,24 @@ namespace AssemblyClient
         public virtual async Task<T> PostData<T>(string uri, object data)
         {
             var response = await client.PostData(uri, Configuration.Token, data);
-            var isTokenValid = response.IsValidToken();
+            var isTokenValid = await response.IsValidToken();
 
             if (!isTokenValid)
             {
-                var newToken = RefreshToken(Configuration.RefreshToken);
+                var newToken = await RefreshToken(Configuration.RefreshToken);
                 Configuration.Token = newToken;
 
                 OnTokenRefreshed(newToken);
 
                 response = await client.PostData(uri, Configuration.Token, data);
-                response.EnsurePlatformSuccess();
+                await response.EnsurePlatformSuccess();
             }
             else
             {
-                response.EnsurePlatformSuccess();
+                await response.EnsurePlatformSuccess();
             }
 
-            var result = response.Deserialize<T>();
+            var result = await response.Deserialize<T>();
             return result;
         }
 
@@ -63,16 +63,16 @@ namespace AssemblyClient
             return result;
         }
 
-        private string RefreshToken(string refreshToken)
+        private async Task<string> RefreshToken(string refreshToken)
         {
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Configuration.BasicAuth);
 
             var refreshRequest = new ApiGrant(refreshToken);
-            var response = client.PostData("/oauth/token", Configuration.Token, refreshRequest).Result;
+            var response = await client.PostData("/oauth/token", Configuration.Token, refreshRequest);
 
-            response.EnsurePlatformSuccess();
+            await response.EnsurePlatformSuccess();
 
-            var refreshedToken = response.Deserialize();
+            var refreshedToken = await response.Deserialize();
             return refreshedToken.access_token;
         }
 
@@ -87,24 +87,24 @@ namespace AssemblyClient
             }
 
             var response = await client.MakeRequest(resourceWithQuery, Configuration.Token);
-            var isTokenValid = response.IsValidToken();
+            var isTokenValid = await response.IsValidToken();
 
             if (!isTokenValid)
             {
-                var newToken = RefreshToken(Configuration.RefreshToken);
+                var newToken = await RefreshToken(Configuration.RefreshToken);
                 Configuration.Token = newToken;
 
                 OnTokenRefreshed(newToken);
 
                 response = await client.MakeRequest(resourceWithQuery, Configuration.Token);
-                response.EnsurePlatformSuccess();
+                await response.EnsurePlatformSuccess();
             }
             else
             {
-                response.EnsurePlatformSuccess();
+                await response.EnsurePlatformSuccess();
             }
 
-            var result = response.Content.ReadAsStringAsync().Result;
+            var result = await response.Content.ReadAsStringAsync();
             return result;
         }
 
